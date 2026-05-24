@@ -1,35 +1,35 @@
 import { computed, onMounted, onUnmounted, ref, shallowRef, watch, type ComputedRef } from 'vue';
-import { DialStore } from '../store/DialStore';
+import { DesignKitStore } from '../store/DesignKitStore';
 import type {
   ActionConfig,
   ColorConfig,
-  DialConfig,
-  DialValue,
+  DesignConfig,
+  DesignValue,
   EasingConfig,
   ResolvedValues,
   SelectConfig,
   ShortcutConfig,
   SpringConfig,
   TextConfig,
-} from '../store/DialStore';
+} from '../store/DesignKitStore';
 
 export interface UseDialOptions {
   onAction?: (action: string) => void;
   shortcuts?: Record<string, ShortcutConfig>;
 }
 
-let dialKitInstance = 0;
+let designKitInstance = 0;
 
-export function useDialKit<T extends DialConfig>(
+export function useDesignKit<T extends DesignConfig>(
   name: string,
   config: T,
   options?: UseDialOptions
 ): ComputedRef<ResolvedValues<T>> {
-  const panelId = `${name}-${++dialKitInstance}`;
+  const panelId = `${name}-${++designKitInstance}`;
   const configRef = shallowRef(config);
   const onActionRef = ref(options?.onAction);
   const shortcutsRef = shallowRef(options?.shortcuts);
-  const values = ref<Record<string, DialValue>>(DialStore.getValues(panelId));
+  const values = ref<Record<string, DesignValue>>(DesignKitStore.getValues(panelId));
   const mounted = ref(false);
   const serializedConfig = computed(() => JSON.stringify(config));
   const serializedShortcuts = computed(() => JSON.stringify(options?.shortcuts));
@@ -38,14 +38,14 @@ export function useDialKit<T extends DialConfig>(
   let unsubscribeActions: (() => void) | undefined;
 
   const register = () => {
-    DialStore.registerPanel(panelId, name, configRef.value, shortcutsRef.value);
-    values.value = DialStore.getValues(panelId);
+    DesignKitStore.registerPanel(panelId, name, configRef.value, shortcutsRef.value);
+    values.value = DesignKitStore.getValues(panelId);
 
-    unsubscribeValues = DialStore.subscribe(panelId, () => {
-      values.value = DialStore.getValues(panelId);
+    unsubscribeValues = DesignKitStore.subscribe(panelId, () => {
+      values.value = DesignKitStore.getValues(panelId);
     });
 
-    unsubscribeActions = DialStore.subscribeActions(panelId, (action) => {
+    unsubscribeActions = DesignKitStore.subscribeActions(panelId, (action) => {
       onActionRef.value?.(action);
     });
   };
@@ -62,8 +62,8 @@ export function useDialKit<T extends DialConfig>(
     configRef.value = config;
     shortcutsRef.value = options?.shortcuts;
     if (mounted.value) {
-      DialStore.updatePanel(panelId, name, configRef.value, shortcutsRef.value);
-      values.value = DialStore.getValues(panelId);
+      DesignKitStore.updatePanel(panelId, name, configRef.value, shortcutsRef.value);
+      values.value = DesignKitStore.getValues(panelId);
     }
   });
 
@@ -75,15 +75,15 @@ export function useDialKit<T extends DialConfig>(
   onUnmounted(() => {
     unsubscribeValues?.();
     unsubscribeActions?.();
-    DialStore.unregisterPanel(panelId);
+    DesignKitStore.unregisterPanel(panelId);
   });
 
   return computed(() => buildResolvedValues(configRef.value, values.value, '') as ResolvedValues<T>);
 }
 
 function buildResolvedValues(
-  config: DialConfig,
-  flatValues: Record<string, DialValue>,
+  config: DesignConfig,
+  flatValues: Record<string, DesignValue>,
   prefix: string
 ): Record<string, unknown> {
   const result: Record<string, unknown> = {};
@@ -108,7 +108,7 @@ function buildResolvedValues(
     } else if (isTextConfig(configValue)) {
       result[key] = flatValues[path] ?? configValue.default ?? '';
     } else if (typeof configValue === 'object' && configValue !== null) {
-      result[key] = buildResolvedValues(configValue as DialConfig, flatValues, path);
+      result[key] = buildResolvedValues(configValue as DesignConfig, flatValues, path);
     }
   }
 

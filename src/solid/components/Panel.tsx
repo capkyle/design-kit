@@ -1,8 +1,8 @@
 import { createSignal, createEffect, onMount, onCleanup, Show, For, JSX } from 'solid-js';
 import { animate } from 'motion';
 import { ICON_CLIPBOARD, ICON_CHECK, ICON_ADD_PRESET } from '../../icons';
-import { DialStore } from '../../store/DialStore';
-import type { ControlMeta, PanelConfig, SpringConfig, DialValue } from '../../store/DialStore';
+import { DesignKitStore } from '../../store/DesignKitStore';
+import type { ControlMeta, PanelConfig, SpringConfig, DesignValue } from '../../store/DesignKitStore';
 import { useShortcutContext } from './ShortcutListener';
 import { ShortcutsMenu } from './ShortcutsMenu';
 import { Folder } from './Folder';
@@ -25,11 +25,11 @@ export function Panel(props: PanelProps) {
   const [isPanelOpen, setIsPanelOpen] = createSignal(props.defaultOpen ?? true);
   const shortcutCtx = useShortcutContext();
   const hasShortcuts = () => Object.keys(props.panel.shortcuts).length > 0;
-  const [values, setValues] = createSignal<Record<string, DialValue>>(
-    DialStore.getValues(props.panel.id)
+  const [values, setValues] = createSignal<Record<string, DesignValue>>(
+    DesignKitStore.getValues(props.panel.id)
   );
-  const [presets, setPresets] = createSignal(DialStore.getPresets(props.panel.id));
-  const [activePresetId, setActivePresetId] = createSignal(DialStore.getActivePresetId(props.panel.id));
+  const [presets, setPresets] = createSignal(DesignKitStore.getPresets(props.panel.id));
+  const [activePresetId, setActivePresetId] = createSignal(DesignKitStore.getActivePresetId(props.panel.id));
   let addButtonRef!: HTMLButtonElement;
   let copyButtonRef!: HTMLButtonElement;
   let copyClipboardIconRef!: HTMLSpanElement;
@@ -47,10 +47,10 @@ export function Panel(props: PanelProps) {
   const tapTransition = { type: 'spring' as const, visualDuration: 0.15, bounce: 0.3 };
 
   onMount(() => {
-    const unsub = DialStore.subscribe(props.panel.id, () => {
-      setValues(DialStore.getValues(props.panel.id));
-      setPresets(DialStore.getPresets(props.panel.id));
-      setActivePresetId(DialStore.getActivePresetId(props.panel.id));
+    const unsub = DesignKitStore.subscribe(props.panel.id, () => {
+      setValues(DesignKitStore.getValues(props.panel.id));
+      setPresets(DesignKitStore.getPresets(props.panel.id));
+      setActivePresetId(DesignKitStore.getActivePresetId(props.panel.id));
     });
 
     if (copyClipboardIconRef && copyCheckIconRef) {
@@ -70,12 +70,12 @@ export function Panel(props: PanelProps) {
 
   const handleAddPreset = () => {
     const nextNum = presets().length + 2;
-    DialStore.savePreset(props.panel.id, `Version ${nextNum}`);
+    DesignKitStore.savePreset(props.panel.id, `Version ${nextNum}`);
   };
 
   const handleCopy = () => {
     const jsonStr = JSON.stringify(values(), null, 2);
-    const instruction = `Update the createDialKit configuration for "${props.panel.name}" with these values:\n\n\`\`\`json\n${jsonStr}\n\`\`\`\n\nApply these values as the new defaults in the createDialKit call.`;
+    const instruction = `Update the createDesignKit configuration for "${props.panel.name}" with these values:\n\n\`\`\`json\n${jsonStr}\n\`\`\`\n\nApply these values as the new defaults in the createDesignKit call.`;
     navigator.clipboard.writeText(instruction);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
@@ -143,7 +143,7 @@ export function Panel(props: PanelProps) {
           <Slider
             label={control.label}
             value={value() as number}
-            onChange={(v) => DialStore.updateValue(props.panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(props.panel.id, control.path, v)}
             min={control.min}
             max={control.max}
             step={control.step}
@@ -157,7 +157,7 @@ export function Panel(props: PanelProps) {
           <Toggle
             label={control.label}
             checked={value() as boolean}
-            onChange={(v) => DialStore.updateValue(props.panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(props.panel.id, control.path, v)}
             shortcut={control.shortcut}
             shortcutActive={shortcutCtx().activePanelId === props.panel.id && shortcutCtx().activePath === control.path}
           />
@@ -170,7 +170,7 @@ export function Panel(props: PanelProps) {
             path={control.path}
             label={control.label}
             spring={value() as SpringConfig}
-            onChange={(v) => DialStore.updateValue(props.panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(props.panel.id, control.path, v)}
           />
         );
 
@@ -188,7 +188,7 @@ export function Panel(props: PanelProps) {
           <TextControl
             label={control.label}
             value={value() as string}
-            onChange={(v) => DialStore.updateValue(props.panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(props.panel.id, control.path, v)}
             placeholder={control.placeholder}
           />
         );
@@ -199,7 +199,7 @@ export function Panel(props: PanelProps) {
             label={control.label}
             value={value() as string}
             options={control.options ?? []}
-            onChange={(v) => DialStore.updateValue(props.panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(props.panel.id, control.path, v)}
           />
         );
 
@@ -208,7 +208,7 @@ export function Panel(props: PanelProps) {
           <ColorControl
             label={control.label}
             value={value() as string}
-            onChange={(v) => DialStore.updateValue(props.panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(props.panel.id, control.path, v)}
           />
         );
 
@@ -224,8 +224,8 @@ export function Panel(props: PanelProps) {
           <>
             {control.type === 'action' ? (
               <button
-                class="dialkit-button"
-                onClick={() => DialStore.triggerAction(props.panel.id, control.path)}
+                class="design-kit-button"
+                onClick={() => DesignKitStore.triggerAction(props.panel.id, control.path)}
               >
                 {control.label}
               </button>
@@ -242,7 +242,7 @@ export function Panel(props: PanelProps) {
     <>
       <button
         ref={addButtonRef}
-        class="dialkit-toolbar-add"
+        class="design-kit-toolbar-add"
         onClick={handleAddPreset}
         onPointerDown={handleAddTapStart}
         onPointerUp={handleAddTapEnd}
@@ -268,7 +268,7 @@ export function Panel(props: PanelProps) {
 
       <button
         ref={copyButtonRef}
-        class="dialkit-toolbar-copy"
+        class="design-kit-toolbar-copy"
         onClick={handleCopy}
         onPointerDown={handleCopyTapStart}
         onPointerUp={handleCopyTapEnd}
@@ -276,10 +276,10 @@ export function Panel(props: PanelProps) {
         onPointerLeave={handleCopyTapEnd}
         title="Copy parameters"
       >
-        <span class="dialkit-toolbar-copy-icon-wrap">
+        <span class="design-kit-toolbar-copy-icon-wrap">
           <span
             ref={copyClipboardIconRef}
-            class="dialkit-toolbar-copy-icon"
+            class="design-kit-toolbar-copy-icon"
             style={{ opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' }}
           >
             <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
@@ -290,7 +290,7 @@ export function Panel(props: PanelProps) {
           </span>
           <span
             ref={copyCheckIconRef}
-            class="dialkit-toolbar-copy-icon"
+            class="design-kit-toolbar-copy-icon"
             style={{ opacity: 0, transform: 'scale(0.5)', filter: 'blur(4px)' }}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
@@ -305,7 +305,7 @@ export function Panel(props: PanelProps) {
   );
 
   return (
-    <div class="dialkit-panel-wrapper">
+    <div class="design-kit-panel-wrapper">
       <Folder title={props.panel.name} defaultOpen={props.defaultOpen ?? true} isRoot={true} inline={props.inline ?? false} onOpenChange={setIsPanelOpen} toolbar={toolbar}>
         {renderControls()}
       </Folder>

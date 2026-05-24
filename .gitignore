@@ -6,8 +6,8 @@ dist/
 .svelte-kit/
 
 # Generated artifacts from svelte-package
-src/store/DialStore.d.ts
-src/store/DialStore.d.ts.map
+src/store/DesignKitStore.d.ts
+src/store/DesignKitStore.d.ts.map
 src/svelte/theme-css.ts
 
 # IDE

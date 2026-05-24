@@ -68,7 +68,7 @@
   $effect(() => {
     if (typeof document === 'undefined' || !triggerRef) return;
 
-    portalTarget = (triggerRef.closest('.dialkit-root') as HTMLElement | null) ?? document.body;
+    portalTarget = (triggerRef.closest('.design-kit-root') as HTMLElement | null) ?? document.body;
   });
 
   $effect(() => {
@@ -99,18 +99,18 @@
   });
 </script>
 
-<div class="dialkit-select-row">
+<div class="design-kit-select-row">
   <button
     bind:this={triggerRef}
-    class="dialkit-select-trigger"
+    class="design-kit-select-trigger"
     onclick={() => (isOpen ? closeDropdown() : openDropdown())}
     data-open={String(isOpen)}
   >
-    <span class="dialkit-select-label">{label}</span>
-    <div class="dialkit-select-right">
-      <span class="dialkit-select-value">{selectedOption?.label ?? value}</span>
+    <span class="design-kit-select-label">{label}</span>
+    <div class="design-kit-select-right">
+      <span class="design-kit-select-value">{selectedOption?.label ?? value}</span>
       <svg
-        class="dialkit-select-chevron"
+        class="design-kit-select-chevron"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -129,13 +129,13 @@
       {#if isOpen && pos}
         <div
           bind:this={dropdownRef}
-          class="dialkit-select-dropdown"
+          class="design-kit-select-dropdown"
           style={dropdownStyle}
           transition:dropdownTransition={{ above: pos.above }}
         >
           {#each normalized as option (option.value)}
             <button
-              class="dialkit-select-option"
+              class="design-kit-select-option"
               data-selected={String(option.value === value)}
               onclick={() => {
                 onChange(option.value);

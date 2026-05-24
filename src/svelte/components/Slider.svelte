@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
   import { Spring } from 'svelte/motion';
-  import type { ShortcutConfig } from 'dialkit/store';
+  import type { ShortcutConfig } from 'design-kit/store';
   import { decimalsForStep, roundValue, snapToDecile, formatSliderShortcut } from '../../shortcut-utils';
 
   let {
@@ -267,9 +267,9 @@
   const handleStyle = $derived(`left:max(5px, calc(${fillPercent.current}% - 9px));opacity:${handleOpacityMv.current};transform:translateY(-50%) scaleX(${handleScaleXMv.current}) scaleY(${handleScaleYMv.current});`);
 </script>
 
-<div bind:this={wrapperRef} class="dialkit-slider-wrapper">
+<div bind:this={wrapperRef} class="design-kit-slider-wrapper">
   <div
-    class={`dialkit-slider ${isActive ? 'dialkit-slider-active' : ''}`}
+    class={`design-kit-slider ${isActive ? 'design-kit-slider-active' : ''}`}
     style={trackStyle}
     onpointerdown={handlePointerDown}
     onpointermove={handlePointerMove}
@@ -278,20 +278,20 @@
     onmouseenter={() => (isHovered = true)}
     onmouseleave={() => (isHovered = false)}
   >
-    <div class="dialkit-slider-hashmarks">
+    <div class="design-kit-slider-hashmarks">
       {#each hashMarks as mark (mark.key)}
-        <div class="dialkit-slider-hashmark" style:left={`${mark.left}%`} />
+        <div class="design-kit-slider-hashmark" style:left={`${mark.left}%`} />
       {/each}
     </div>
 
-    <div class="dialkit-slider-fill" style={fillStyle} />
+    <div class="design-kit-slider-fill" style={fillStyle} />
 
-    <div class="dialkit-slider-handle" style={handleStyle} />
+    <div class="design-kit-slider-handle" style={handleStyle} />
 
-    <span bind:this={labelRef} class="dialkit-slider-label">
+    <span bind:this={labelRef} class="design-kit-slider-label">
       {label}
       {#if shortcut}
-        <span class={`dialkit-shortcut-pill${shortcutActive ? ' dialkit-shortcut-pill-active' : ''}`}>
+        <span class={`design-kit-shortcut-pill${shortcutActive ? ' design-kit-shortcut-pill-active' : ''}`}>
           {formatSliderShortcut(shortcut)}
         </span>
       {/if}
@@ -301,7 +301,7 @@
       <input
         bind:this={inputRef}
         type="text"
-        class="dialkit-slider-input"
+        class="design-kit-slider-input"
         value={inputValue}
         oninput={(e) => (inputValue = (e.currentTarget as HTMLInputElement).value)}
         onkeydown={(e) => {
@@ -318,7 +318,7 @@
     {:else}
       <span
         bind:this={valueSpanRef}
-        class={`dialkit-slider-value ${isValueEditable ? 'dialkit-slider-value-editable' : ''}`}
+        class={`design-kit-slider-value ${isValueEditable ? 'design-kit-slider-value-editable' : ''}`}
         onmouseenter={() => (isValueHovered = true)}
         onmouseleave={() => (isValueHovered = false)}
         onclick={handleValueClick}

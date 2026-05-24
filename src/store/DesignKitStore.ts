@@ -1,4 +1,4 @@
-// Lightweight state store with subscriptions for dialkit
+// Lightweight state store with subscriptions for design-kit
 
 export type SpringConfig = {
   type: 'spring';
@@ -39,13 +39,13 @@ export type TextConfig = {
   placeholder?: string;
 };
 
-export type DialValue = number | boolean | string | SpringConfig | EasingConfig | ActionConfig | SelectConfig | ColorConfig | TextConfig;
+export type DesignValue = number | boolean | string | SpringConfig | EasingConfig | ActionConfig | SelectConfig | ColorConfig | TextConfig;
 
-export type DialConfig = {
-  [key: string]: DialValue | [number, number, number, number?] | DialConfig;
+export type DesignConfig = {
+  [key: string]: DesignValue | [number, number, number, number?] | DesignConfig;
 };
 
-export type ResolvedValues<T extends DialConfig> = {
+export type ResolvedValues<T extends DesignConfig> = {
   [K in keyof T]: T[K] extends [number, number, number, number?]
     ? number
     : T[K] extends SpringConfig
@@ -58,7 +58,7 @@ export type ResolvedValues<T extends DialConfig> = {
             ? string
             : T[K] extends TextConfig
               ? string
-              : T[K] extends DialConfig
+              : T[K] extends DesignConfig
                 ? ResolvedValues<T[K]>
                 : T[K];
 };
@@ -91,7 +91,7 @@ export type PanelConfig = {
   id: string;
   name: string;
   controls: ControlMeta[];
-  values: Record<string, DialValue>;
+  values: Record<string, DesignValue>;
   shortcuts: Record<string, ShortcutConfig>;
 };
 
@@ -101,23 +101,23 @@ type ActionListener = (action: string) => void;
 export type Preset = {
   id: string;
   name: string;
-  values: Record<string, DialValue>;
+  values: Record<string, DesignValue>;
 };
 
 // Stable empty object for unregistered panels (React 19 useSyncExternalStore requirement)
-const EMPTY_VALUES: Record<string, DialValue> = Object.freeze({});
+const EMPTY_VALUES: Record<string, DesignValue> = Object.freeze({});
 
-class DialStoreClass {
+class DesignKitStoreClass {
   private panels: Map<string, PanelConfig> = new Map();
   private listeners: Map<string, Set<Listener>> = new Map();
   private globalListeners: Set<Listener> = new Set();
-  private snapshots: Map<string, Record<string, DialValue>> = new Map();
+  private snapshots: Map<string, Record<string, DesignValue>> = new Map();
   private actionListeners: Map<string, Set<ActionListener>> = new Map();
   private presets: Map<string, Preset[]> = new Map();
   private activePreset: Map<string, string | null> = new Map();
-  private baseValues: Map<string, Record<string, DialValue>> = new Map();
+  private baseValues: Map<string, Record<string, DesignValue>> = new Map();
 
-  registerPanel(id: string, name: string, config: DialConfig, shortcuts?: Record<string, ShortcutConfig>): void {
+  registerPanel(id: string, name: string, config: DesignConfig, shortcuts?: Record<string, ShortcutConfig>): void {
     const controls = this.parseConfig(config, '', shortcuts);
     const values = this.flattenValues(config, '');
 
@@ -130,7 +130,7 @@ class DialStoreClass {
     this.notifyGlobal();
   }
 
-  updatePanel(id: string, name: string, config: DialConfig, shortcuts?: Record<string, ShortcutConfig>): void {
+  updatePanel(id: string, name: string, config: DesignConfig, shortcuts?: Record<string, ShortcutConfig>): void {
     const existing = this.panels.get(id);
     if (!existing) {
       this.registerPanel(id, name, config, shortcuts);
@@ -140,7 +140,7 @@ class DialStoreClass {
     const controls = this.parseConfig(config, '', shortcuts);
     const controlsByPath = this.mapControlsByPath(controls);
     const defaultValues = this.flattenValues(config, '');
-    const nextValues: Record<string, DialValue> = {};
+    const nextValues: Record<string, DesignValue> = {};
 
     for (const [path, defaultValue] of Object.entries(defaultValues)) {
       nextValues[path] = this.normalizePreservedValue(
@@ -170,7 +170,7 @@ class DialStoreClass {
     this.snapshots.set(id, { ...nextValues });
 
     const previousBaseValues = this.baseValues.get(id) ?? {};
-    const nextBaseValues: Record<string, DialValue> = {};
+    const nextBaseValues: Record<string, DesignValue> = {};
     for (const [path, defaultValue] of Object.entries(defaultValues)) {
       nextBaseValues[path] = this.normalizePreservedValue(
         previousBaseValues[path],
@@ -200,7 +200,7 @@ class DialStoreClass {
     this.notifyGlobal();
   }
 
-  updateValue(panelId: string, path: string, value: DialValue): void {
+  updateValue(panelId: string, path: string, value: DesignValue): void {
     const panel = this.panels.get(panelId);
     if (!panel) return;
 
@@ -247,12 +247,12 @@ class DialStoreClass {
     return (panel.values[`${path}.__mode`] as 'easing' | 'simple' | 'advanced') || 'simple';
   }
 
-  getValue(panelId: string, path: string): DialValue | undefined {
+  getValue(panelId: string, path: string): DesignValue | undefined {
     const panel = this.panels.get(panelId);
     return panel?.values[path];
   }
 
-  getValues(panelId: string): Record<string, DialValue> {
+  getValues(panelId: string): Record<string, DesignValue> {
     // Return the snapshot for useSyncExternalStore compatibility
     // Use stable EMPTY_VALUES to avoid infinite loop in React 19
     return this.snapshots.get(panelId) ?? EMPTY_VALUES;
@@ -429,7 +429,7 @@ class DialStoreClass {
     this.globalListeners.forEach(fn => fn());
   }
 
-  private initTransitionModes(config: DialConfig, prefix: string, values: Record<string, DialValue>): void {
+  private initTransitionModes(config: DesignConfig, prefix: string, values: Record<string, DesignValue>): void {
     for (const [key, value] of Object.entries(config)) {
       if (key === '_collapsed') continue;
       const path = prefix ? `${prefix}.${key}` : key;
@@ -442,12 +442,12 @@ class DialStoreClass {
         const hasTime = value.visualDuration !== undefined || value.bounce !== undefined;
         values[`${path}.__mode`] = hasPhysics && !hasTime ? 'advanced' : 'simple';
       } else if (typeof value === 'object' && value !== null && !Array.isArray(value) && !this.isActionConfig(value) && !this.isSelectConfig(value) && !this.isColorConfig(value) && !this.isTextConfig(value)) {
-        this.initTransitionModes(value as DialConfig, path, values);
+        this.initTransitionModes(value as DesignConfig, path, values);
       }
     }
   }
 
-  private parseConfig(config: DialConfig, prefix: string, shortcuts?: Record<string, ShortcutConfig>): ControlMeta[] {
+  private parseConfig(config: DesignConfig, prefix: string, shortcuts?: Record<string, ShortcutConfig>): ControlMeta[] {
     const controls: ControlMeta[] = [];
 
     for (const [key, value] of Object.entries(config)) {
@@ -492,7 +492,7 @@ class DialStoreClass {
         }
       } else if (typeof value === 'object' && value !== null) {
         // Nested object becomes a folder
-        const folderConfig = value as DialConfig;
+        const folderConfig = value as DesignConfig;
         const defaultOpen = '_collapsed' in folderConfig ? !(folderConfig._collapsed as boolean) : true;
         controls.push({
           type: 'folder',
@@ -507,8 +507,8 @@ class DialStoreClass {
     return controls;
   }
 
-  private flattenValues(config: DialConfig, prefix: string): Record<string, DialValue> {
-    const values: Record<string, DialValue> = {};
+  private flattenValues(config: DesignConfig, prefix: string): Record<string, DesignValue> {
+    const values: Record<string, DesignValue> = {};
 
     for (const [key, value] of Object.entries(config)) {
       if (key === '_collapsed') continue;
@@ -533,7 +533,7 @@ class DialStoreClass {
       } else if (this.isTextConfig(value)) {
         values[path] = value.default ?? '';
       } else if (typeof value === 'object' && value !== null) {
-        Object.assign(values, this.flattenValues(value as DialConfig, path));
+        Object.assign(values, this.flattenValues(value as DesignConfig, path));
       }
     }
 
@@ -632,10 +632,10 @@ class DialStoreClass {
   }
 
   private normalizePreservedValue(
-    existingValue: DialValue | undefined,
-    defaultValue: DialValue,
+    existingValue: DesignValue | undefined,
+    defaultValue: DesignValue,
     control: ControlMeta | undefined
-  ): DialValue {
+  ): DesignValue {
     if (existingValue === undefined || !control) {
       return defaultValue;
     }
@@ -719,4 +719,4 @@ class DialStoreClass {
 }
 
 // Singleton instance
-export const DialStore = new DialStoreClass();
+export const DesignKitStore = new DesignKitStoreClass();

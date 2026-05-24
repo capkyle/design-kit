@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { DialStore } from 'dialkit/store';
-  import type { EasingConfig, SpringConfig, TransitionConfig } from 'dialkit/store';
+  import { DesignKitStore } from 'design-kit/store';
+  import type { EasingConfig, SpringConfig, TransitionConfig } from 'design-kit/store';
   import Folder from './Folder.svelte';
   import Slider from './Slider.svelte';
   import SegmentedControl from './SegmentedControl.svelte';
@@ -17,13 +17,13 @@
     onChange: (value: TransitionConfig) => void;
   }>();
 
-  let mode = $state<CurveMode>(DialStore.getTransitionMode(panelId, path));
+  let mode = $state<CurveMode>(DesignKitStore.getTransitionMode(panelId, path));
   let editingEase = $state(false);
   let easeDraft = $state('');
 
   $effect(() => {
-    const unsub = DialStore.subscribe(panelId, () => {
-      mode = DialStore.getTransitionMode(panelId, path);
+    const unsub = DesignKitStore.subscribe(panelId, () => {
+      mode = DesignKitStore.getTransitionMode(panelId, path);
     });
     return unsub;
   });
@@ -71,7 +71,7 @@
 
   const handleModeChange = (nextMode: string) => {
     const typed = nextMode as CurveMode;
-    DialStore.updateTransitionMode(panelId, path, typed);
+    DesignKitStore.updateTransitionMode(panelId, path, typed);
 
     if (typed === 'easing') {
       onChange(cache.easing);
@@ -118,8 +118,8 @@
       <SpringVisualization spring={spring} isSimpleMode={isSimpleSpring} />
     {/if}
 
-    <div class="dialkit-labeled-control">
-      <span class="dialkit-labeled-control-label">Type</span>
+    <div class="design-kit-labeled-control">
+      <span class="design-kit-labeled-control-label">Type</span>
       <SegmentedControl
         options={[
           { value: 'easing', label: 'Easing' },
@@ -138,11 +138,11 @@
       <Slider label="y2" value={easing.ease[3]} onChange={(v) => updateEase(3, v)} min={-1} max={2} step={0.01} />
       <Slider label="Duration" value={easing.duration} onChange={(v) => onChange({ ...easing, duration: v })} min={0.1} max={2} step={0.05} unit="s" />
 
-      <div class="dialkit-labeled-control">
-        <span class="dialkit-labeled-control-label">Ease</span>
+      <div class="design-kit-labeled-control">
+        <span class="design-kit-labeled-control-label">Ease</span>
         <input
           type="text"
-          class="dialkit-text-input"
+          class="design-kit-text-input"
           value={editingEase ? easeDraft : formatEase(easing.ease)}
           oninput={(e) => (easeDraft = (e.currentTarget as HTMLInputElement).value)}
           onfocus={handleEaseFocus}

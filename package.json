@@ -1,5 +1,5 @@
 {
-  "name": "dialkit",
+  "name": "design-kit",
   "version": "1.2.0",
   "description": "Real-time parameter tweaking for React, Solid, and Svelte apps",
   "type": "module",
@@ -59,7 +59,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsup && npm run build:svelte",
-    "build:svelte": "node scripts/gen-theme-css.js && svelte-package -i src/svelte -o dist/svelte && rm -rf .svelte-kit src/store/DialStore.d.ts src/store/DialStore.d.ts.map",
+    "build:svelte": "node scripts/gen-theme-css.js && svelte-package -i src/svelte -o dist/svelte && rm -rf .svelte-kit src/store/DesignKitStore.d.ts src/store/DesignKitStore.d.ts.map",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.solid.json && tsc --noEmit -p tsconfig.vue.json && node scripts/gen-theme-css.js && svelte-check --tsconfig tsconfig.svelte.json"
   },
@@ -121,6 +121,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/joshpuckett/dialkit"
+    "url": "https://github.com/joshpuckett/design-kit"
   }
 }

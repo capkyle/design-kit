@@ -127,29 +127,29 @@ export function Folder(props: FolderProps) {
   const folderContent = () => (
     <div
       ref={(el) => { if (props.isRoot) contentRef = el; }}
-      class={`dialkit-folder ${props.isRoot ? 'dialkit-folder-root' : ''}`}
+      class={`design-kit-folder ${props.isRoot ? 'design-kit-folder-root' : ''}`}
     >
       <div
-        class={`dialkit-folder-header ${props.isRoot ? 'dialkit-panel-header' : ''}`}
+        class={`design-kit-folder-header ${props.isRoot ? 'design-kit-panel-header' : ''}`}
         onClick={handleToggle}
       >
-        <div class="dialkit-folder-header-top">
+        <div class="design-kit-folder-header-top">
           {props.isRoot ? (
             <Show when={isOpen()}>
-              <div class="dialkit-folder-title-row">
-                <span class="dialkit-folder-title dialkit-folder-title-root">
+              <div class="design-kit-folder-title-row">
+                <span class="design-kit-folder-title design-kit-folder-title-root">
                   {props.title}
                 </span>
               </div>
             </Show>
           ) : (
-            <div class="dialkit-folder-title-row">
-              <span class="dialkit-folder-title">{props.title}</span>
+            <div class="design-kit-folder-title-row">
+              <span class="design-kit-folder-title">{props.title}</span>
             </div>
           )}
 
           {props.isRoot && !props.inline && (
-            <svg class="dialkit-panel-icon" viewBox="0 0 16 16" fill="none">
+            <svg class="design-kit-panel-icon" viewBox="0 0 16 16" fill="none">
               <path
                 opacity="0.5"
                 d={ICON_PANEL.path}
@@ -163,7 +163,7 @@ export function Folder(props: FolderProps) {
           {!props.isRoot && (
             <svg
               ref={folderChevronRef}
-              class="dialkit-folder-icon"
+              class="design-kit-folder-icon"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -177,7 +177,7 @@ export function Folder(props: FolderProps) {
         </div>
 
         <Show when={props.isRoot && props.toolbar && isOpen()}>
-          <div class="dialkit-panel-toolbar" onClick={(e) => e.stopPropagation()}>
+          <div class="design-kit-panel-toolbar" onClick={(e) => e.stopPropagation()}>
             {props.toolbar}
           </div>
         </Show>
@@ -206,10 +206,10 @@ export function Folder(props: FolderProps) {
               }
             );
           }}
-          class="dialkit-folder-content"
+          class="design-kit-folder-content"
           style={!props.isRoot ? { 'clip-path': 'inset(0 -20px)' } : undefined}
         >
-          <div class="dialkit-folder-inner">{props.children}</div>
+          <div class="design-kit-folder-inner">{props.children}</div>
         </div>
       </Show>
     </div>
@@ -218,7 +218,7 @@ export function Folder(props: FolderProps) {
   if (props.isRoot) {
     if (props.inline) {
       return (
-        <div class="dialkit-panel-inner dialkit-panel-inline">
+        <div class="design-kit-panel-inner design-kit-panel-inline">
           {folderContent()}
         </div>
       );
@@ -295,7 +295,7 @@ export function Folder(props: FolderProps) {
     return (
       <div
         ref={panelRef}
-        class="dialkit-panel-inner"
+        class="design-kit-panel-inner"
         data-collapsed={String(isCollapsed())}
         onPointerDown={() => {
           if (isOpen()) return;

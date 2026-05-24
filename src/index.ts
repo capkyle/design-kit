@@ -1,10 +1,10 @@
 // Main hook
-export { useDialKit } from './hooks/useDialKit';
-export type { UseDialOptions } from './hooks/useDialKit';
+export { useDesignKit } from './hooks/useDesignKit';
+export type { UseDialOptions } from './hooks/useDesignKit';
 
 // Root component (user mounts once)
-export { DialRoot } from './components/DialRoot';
-export type { DialPosition, DialMode, DialTheme } from './components/DialRoot';
+export { DesignKitRoot } from './components/DesignKitRoot';
+export type { DesignPosition, DesignMode, DesignTheme } from './components/DesignKitRoot';
 
 // Individual components (for advanced usage)
 export { Slider } from './components/Slider';
@@ -22,7 +22,7 @@ export { PresetManager } from './components/PresetManager';
 export { ShortcutsMenu } from './components/ShortcutsMenu';
 
 // Store (for advanced usage)
-export { DialStore } from './store/DialStore';
+export { DesignKitStore } from './store/DesignKitStore';
 export type {
   SpringConfig,
   EasingConfig,
@@ -35,9 +35,17 @@ export type {
   ShortcutMode,
   ShortcutInteraction,
   Preset,
-  DialValue,
-  DialConfig,
+  DesignValue,
+  DesignConfig,
   ResolvedValues,
   ControlMeta,
   PanelConfig,
-} from './store/DialStore';
+} from './store/DesignKitStore';
+
+// Expose the running store on `window` for external hosts (IDE
+// integrations, design tooling) that need to read/write panel values
+// from outside the app's JS context. Guarded for SSR.
+if (typeof window !== 'undefined') {
+  // @ts-ignore — intentional global side-effect for external hosts.
+  (window as any).__designKit = DesignKitStore;
+}

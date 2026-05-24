@@ -14,7 +14,7 @@ function normalizeOptions(options: SelectOption[]): { value: string; label: stri
 }
 
 export const SelectControl = defineComponent({
-  name: 'DialKitSelectControl',
+  name: 'DesignKitSelectControl',
   props: {
     label: { type: String, required: true },
     value: { type: String, required: true },
@@ -101,22 +101,22 @@ export const SelectControl = defineComponent({
     });
 
     onMounted(() => {
-      const root = triggerRef.value?.closest('.dialkit-root') as HTMLElement | null;
+      const root = triggerRef.value?.closest('.design-kit-root') as HTMLElement | null;
       portalTarget.value = root ?? document.body;
     });
 
-    return () => h('div', { class: 'dialkit-select-row' }, [
+    return () => h('div', { class: 'design-kit-select-row' }, [
       h('button', {
         ref: triggerRef,
-        class: 'dialkit-select-trigger',
+        class: 'design-kit-select-trigger',
         'data-open': String(isOpen.value),
         onClick: toggleDropdown,
       }, [
-        h('span', { class: 'dialkit-select-label' }, props.label),
-        h('div', { class: 'dialkit-select-right' }, [
-          h('span', { class: 'dialkit-select-value' }, selectedLabel()),
+        h('span', { class: 'design-kit-select-label' }, props.label),
+        h('div', { class: 'design-kit-select-right' }, [
+          h('span', { class: 'design-kit-select-value' }, selectedLabel()),
           h(motion.svg, {
-            class: 'dialkit-select-chevron',
+            class: 'design-kit-select-chevron',
             viewBox: '0 0 24 24',
             fill: 'none',
             stroke: 'currentColor',
@@ -133,9 +133,9 @@ export const SelectControl = defineComponent({
           h(AnimatePresence, null, {
             default: () => (isOpen.value && pos.value)
               ? [h(motion.div, {
-                key: 'dialkit-select-dropdown',
+                key: 'design-kit-select-dropdown',
                 ref: setDropdownRef,
-                class: 'dialkit-select-dropdown',
+                class: 'design-kit-select-dropdown',
                 initial: { opacity: 0, y: pos.value.above ? 8 : -8, scale: 0.95 },
                 animate: { opacity: 1, y: 0, scale: 1 },
                 exit: { opacity: 0, y: pos.value.above ? 8 : -8, scale: 0.95 },
@@ -156,7 +156,7 @@ export const SelectControl = defineComponent({
                 },
               }, normalizedOptions().map((option) => h('button', {
                 key: option.value,
-                class: 'dialkit-select-option',
+                class: 'design-kit-select-option',
                 'data-selected': String(option.value === props.value),
                 onClick: () => {
                   emit('change', option.value);

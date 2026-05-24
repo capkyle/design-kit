@@ -47,9 +47,9 @@ export function SelectControl({ label, value, options, onChange }: SelectControl
     });
   }, [normalized.length]);
 
-  // Resolve portal target (closest .dialkit-root)
+  // Resolve portal target (closest .design-kit-root)
   useEffect(() => {
-    const root = triggerRef.current?.closest('.dialkit-root') as HTMLElement | null;
+    const root = triggerRef.current?.closest('.design-kit-root') as HTMLElement | null;
     setPortalTarget(root ?? document.body);
   }, []);
 
@@ -78,18 +78,18 @@ export function SelectControl({ label, value, options, onChange }: SelectControl
   }, [isOpen]);
 
   return (
-    <div className="dialkit-select-row">
+    <div className="design-kit-select-row">
       <button
         ref={triggerRef}
-        className="dialkit-select-trigger"
+        className="design-kit-select-trigger"
         onClick={() => setIsOpen(!isOpen)}
         data-open={String(isOpen)}
       >
-        <span className="dialkit-select-label">{label}</span>
-        <div className="dialkit-select-right">
-          <span className="dialkit-select-value">{selectedOption?.label ?? value}</span>
+        <span className="design-kit-select-label">{label}</span>
+        <div className="design-kit-select-right">
+          <span className="design-kit-select-value">{selectedOption?.label ?? value}</span>
           <motion.svg
-            className="dialkit-select-chevron"
+            className="design-kit-select-chevron"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -109,7 +109,7 @@ export function SelectControl({ label, value, options, onChange }: SelectControl
           {isOpen && pos && (
             <motion.div
               ref={dropdownRef}
-              className="dialkit-select-dropdown"
+              className="design-kit-select-dropdown"
               initial={{ opacity: 0, y: pos.above ? 8 : -8, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: pos.above ? 8 : -8, scale: 0.95 }}
@@ -126,7 +126,7 @@ export function SelectControl({ label, value, options, onChange }: SelectControl
               {normalized.map((option) => (
                 <button
                   key={option.value}
-                  className="dialkit-select-option"
+                  className="design-kit-select-option"
                   data-selected={String(option.value === value)}
                   onClick={() => {
                     onChange(option.value);

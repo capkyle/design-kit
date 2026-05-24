@@ -1,8 +1,8 @@
 import { Fragment, defineComponent, h, onMounted, onUnmounted, ref, type PropType } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
 import { ICON_ADD_PRESET, ICON_CHECK, ICON_CLIPBOARD } from '../../icons';
-import { DialStore } from '../../store/DialStore';
-import type { ControlMeta, DialValue, PanelConfig, SpringConfig, TransitionConfig } from '../../store/DialStore';
+import { DesignKitStore } from '../../store/DesignKitStore';
+import type { ControlMeta, DesignValue, PanelConfig, SpringConfig, TransitionConfig } from '../../store/DesignKitStore';
 import { Folder } from './Folder';
 import { Slider } from './Slider';
 import { Toggle } from './Toggle';
@@ -16,7 +16,7 @@ import { useShortcutContext } from './ShortcutListener';
 import { ShortcutsMenu } from './ShortcutsMenu';
 
 export const Panel = defineComponent({
-  name: 'DialKitPanel',
+  name: 'DesignKitPanel',
   props: {
     panel: {
       type: Object as PropType<PanelConfig>,
@@ -33,20 +33,20 @@ export const Panel = defineComponent({
   },
   setup(props) {
     const shortcutCtx = useShortcutContext();
-    const values = ref<Record<string, DialValue>>(DialStore.getValues(props.panel.id));
-    const presets = ref(DialStore.getPresets(props.panel.id));
-    const activePresetId = ref<string | null>(DialStore.getActivePresetId(props.panel.id));
+    const values = ref<Record<string, DesignValue>>(DesignKitStore.getValues(props.panel.id));
+    const presets = ref(DesignKitStore.getPresets(props.panel.id));
+    const activePresetId = ref<string | null>(DesignKitStore.getActivePresetId(props.panel.id));
     const copied = ref(false);
-    const hasShortcuts = () => Object.keys(DialStore.getPanel(props.panel.id)?.shortcuts ?? {}).length > 0;
+    const hasShortcuts = () => Object.keys(DesignKitStore.getPanel(props.panel.id)?.shortcuts ?? {}).length > 0;
 
     let unsubscribe: (() => void) | undefined;
     let copiedTimeout: ReturnType<typeof window.setTimeout> | null = null;
 
     onMounted(() => {
-      unsubscribe = DialStore.subscribe(props.panel.id, () => {
-        values.value = DialStore.getValues(props.panel.id);
-        presets.value = DialStore.getPresets(props.panel.id);
-        activePresetId.value = DialStore.getActivePresetId(props.panel.id);
+      unsubscribe = DesignKitStore.subscribe(props.panel.id, () => {
+        values.value = DesignKitStore.getValues(props.panel.id);
+        presets.value = DesignKitStore.getPresets(props.panel.id);
+        activePresetId.value = DesignKitStore.getActivePresetId(props.panel.id);
       });
     });
 
@@ -59,12 +59,12 @@ export const Panel = defineComponent({
 
     const handleAddPreset = () => {
       const nextNum = presets.value.length + 2;
-      DialStore.savePreset(props.panel.id, `Version ${nextNum}`);
+      DesignKitStore.savePreset(props.panel.id, `Version ${nextNum}`);
     };
 
     const handleCopy = () => {
       const json = JSON.stringify(values.value, null, 2);
-      const instruction = `Update the useDialKit configuration for "${props.panel.name}" with these values:\n\n\`\`\`json\n${json}\n\`\`\`\n\nApply these values as the new defaults in the useDialKit call.`;
+      const instruction = `Update the useDesignKit configuration for "${props.panel.name}" with these values:\n\n\`\`\`json\n${json}\n\`\`\`\n\nApply these values as the new defaults in the useDesignKit call.`;
 
       try {
         if (navigator.clipboard?.writeText) {
@@ -97,7 +97,7 @@ export const Panel = defineComponent({
             step: control.step,
             shortcut: control.shortcut,
             shortcutActive: shortcutCtx.activePanelId.value === props.panel.id && shortcutCtx.activePath.value === control.path,
-            onChange: (next: number) => DialStore.updateValue(props.panel.id, control.path, next),
+            onChange: (next: number) => DesignKitStore.updateValue(props.panel.id, control.path, next),
           });
         case 'toggle':
           return h(Toggle, {
@@ -106,7 +106,7 @@ export const Panel = defineComponent({
             checked: value as boolean,
             shortcut: control.shortcut,
             shortcutActive: shortcutCtx.activePanelId.value === props.panel.id && shortcutCtx.activePath.value === control.path,
-            onChange: (next: boolean) => DialStore.updateValue(props.panel.id, control.path, next),
+            onChange: (next: boolean) => DesignKitStore.updateValue(props.panel.id, control.path, next),
           });
         case 'spring':
           return h(SpringControl, {
@@ -115,7 +115,7 @@ export const Panel = defineComponent({
             path: control.path,
             label: control.label,
             spring: value as SpringConfig,
-            onChange: (next: SpringConfig) => DialStore.updateValue(props.panel.id, control.path, next),
+            onChange: (next: SpringConfig) => DesignKitStore.updateValue(props.panel.id, control.path, next),
           });
         case 'transition':
           return h(TransitionControl, {
@@ -124,7 +124,7 @@ export const Panel = defineComponent({
             path: control.path,
             label: control.label,
             value: value as TransitionConfig,
-            onChange: (next: TransitionConfig) => DialStore.updateValue(props.panel.id, control.path, next),
+            onChange: (next: TransitionConfig) => DesignKitStore.updateValue(props.panel.id, control.path, next),
           });
         case 'folder':
           return h(Folder, {
@@ -140,7 +140,7 @@ export const Panel = defineComponent({
             label: control.label,
             value: value as string,
             placeholder: control.placeholder,
-            onChange: (next: string) => DialStore.updateValue(props.panel.id, control.path, next),
+            onChange: (next: string) => DesignKitStore.updateValue(props.panel.id, control.path, next),
           });
         case 'select':
           return h(SelectControl, {
@@ -148,20 +148,20 @@ export const Panel = defineComponent({
             label: control.label,
             value: value as string,
             options: control.options ?? [],
-            onChange: (next: string) => DialStore.updateValue(props.panel.id, control.path, next),
+            onChange: (next: string) => DesignKitStore.updateValue(props.panel.id, control.path, next),
           });
         case 'color':
           return h(ColorControl, {
             key: control.path,
             label: control.label,
             value: value as string,
-            onChange: (next: string) => DialStore.updateValue(props.panel.id, control.path, next),
+            onChange: (next: string) => DesignKitStore.updateValue(props.panel.id, control.path, next),
           });
         case 'action':
           return h('button', {
             key: control.path,
-            class: 'dialkit-button',
-            onClick: () => DialStore.triggerAction(props.panel.id, control.path),
+            class: 'design-kit-button',
+            onClick: () => DesignKitStore.triggerAction(props.panel.id, control.path),
           }, control.label);
         default:
           return null;
@@ -171,7 +171,7 @@ export const Panel = defineComponent({
     return () => {
       const toolbarNode = h(Fragment, null, [
         h(motion.button, {
-          class: 'dialkit-toolbar-add',
+          class: 'design-kit-toolbar-add',
           onClick: handleAddPreset,
           title: 'Add preset',
           whilePress: { scale: 0.9 },
@@ -192,15 +192,15 @@ export const Panel = defineComponent({
           activePresetId: activePresetId.value,
         }),
         h(motion.button, {
-          class: 'dialkit-toolbar-copy',
+          class: 'design-kit-toolbar-copy',
           onClick: handleCopy,
           title: 'Copy parameters',
           whilePress: { scale: 0.95 },
           transition: { type: 'spring', visualDuration: 0.15, bounce: 0.3 },
         }, [
-          h('span', { class: 'dialkit-toolbar-copy-icon-wrap' }, [
+          h('span', { class: 'design-kit-toolbar-copy-icon-wrap' }, [
             h('span', {
-              class: 'dialkit-toolbar-copy-icon',
+              class: 'design-kit-toolbar-copy-icon',
               style: { opacity: copied.value ? 0 : 1, transition: 'opacity 120ms ease' },
             }, [
               h('svg', {
@@ -232,7 +232,7 @@ export const Panel = defineComponent({
               default: () => copied.value
                 ? [h(motion.span, {
                   key: 'check',
-                  class: 'dialkit-toolbar-copy-icon',
+                  class: 'design-kit-toolbar-copy-icon',
                   initial: { scale: 0.5, opacity: 0 },
                   animate: { scale: 1, opacity: 1 },
                   exit: { scale: 0.5, opacity: 0 },
@@ -256,7 +256,7 @@ export const Panel = defineComponent({
         ]),
       ]);
 
-      return h('div', { class: 'dialkit-panel-wrapper' }, [
+      return h('div', { class: 'design-kit-panel-wrapper' }, [
         h(Folder, {
           title: props.panel.name,
           defaultOpen: props.defaultOpen,

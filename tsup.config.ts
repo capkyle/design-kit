@@ -4,7 +4,7 @@ import { solidPlugin } from 'esbuild-plugin-solid';
 export default defineConfig([
   // Store build (shared across all framework entries)
   {
-    entry: { index: 'src/store/DialStore.ts' },
+    entry: { index: 'src/store/DesignKitStore.ts' },
     outDir: 'dist/store',
     format: ['esm', 'cjs'],
     dts: true,

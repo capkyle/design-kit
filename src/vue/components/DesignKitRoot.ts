@@ -1,12 +1,12 @@
 import { defineComponent, h, onMounted, onUnmounted, ref, Teleport } from 'vue';
-import { DialStore } from '../../store/DialStore';
-import type { PanelConfig } from '../../store/DialStore';
+import { DesignKitStore } from '../../store/DesignKitStore';
+import type { PanelConfig } from '../../store/DesignKitStore';
 import { Panel } from './Panel';
 import { ShortcutListener } from './ShortcutListener';
 
-export type DialPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-export type DialMode = 'popover' | 'inline';
-export type DialTheme = 'light' | 'dark' | 'system';
+export type DesignPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+export type DesignMode = 'popover' | 'inline';
+export type DesignTheme = 'light' | 'dark' | 'system';
 
 declare const process: { env?: { NODE_ENV?: string } } | undefined;
 
@@ -16,11 +16,11 @@ const isDevDefault = typeof process !== 'undefined' && process?.env?.NODE_ENV
     ? (import.meta as any).env.MODE !== 'production'
     : true;
 
-export const DialRoot = defineComponent({
-  name: 'DialKitDialRoot',
+export const DesignKitRoot = defineComponent({
+  name: 'DesignKitDesignKitRoot',
   props: {
     position: {
-      type: String as () => DialPosition,
+      type: String as () => DesignPosition,
       default: 'top-right',
     },
     defaultOpen: {
@@ -28,11 +28,11 @@ export const DialRoot = defineComponent({
       default: true,
     },
     mode: {
-      type: String as () => DialMode,
+      type: String as () => DesignMode,
       default: 'popover',
     },
     theme: {
-      type: String as () => DialTheme,
+      type: String as () => DesignTheme,
       default: 'system',
     },
     productionEnabled: {
@@ -47,9 +47,9 @@ export const DialRoot = defineComponent({
 
     onMounted(() => {
       mounted.value = true;
-      panels.value = DialStore.getPanels();
-      unsubscribe = DialStore.subscribeGlobal(() => {
-        panels.value = DialStore.getPanels();
+      panels.value = DesignKitStore.getPanels();
+      unsubscribe = DesignKitStore.subscribeGlobal(() => {
+        panels.value = DesignKitStore.getPanels();
       });
     });
 
@@ -58,9 +58,9 @@ export const DialRoot = defineComponent({
     });
 
     const renderContent = () => h(ShortcutListener, null, {
-      default: () => h('div', { class: 'dialkit-root', 'data-mode': props.mode, 'data-theme': props.theme }, [
+      default: () => h('div', { class: 'design-kit-root', 'data-mode': props.mode, 'data-theme': props.theme }, [
         h('div', {
-          class: 'dialkit-panel',
+          class: 'design-kit-panel',
           'data-position': props.mode === 'inline' ? undefined : props.position,
           'data-mode': props.mode,
         }, panels.value.map((panel) => h(Panel, {

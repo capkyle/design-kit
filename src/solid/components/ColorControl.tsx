@@ -44,13 +44,13 @@ export function ColorControl(props: ColorControlProps) {
   };
 
   return (
-    <div class="dialkit-color-control">
-      <label class="dialkit-color-label" for={textInputId}>{props.label}</label>
-      <div class="dialkit-color-inputs">
+    <div class="design-kit-color-control">
+      <label class="design-kit-color-label" for={textInputId}>{props.label}</label>
+      <div class="design-kit-color-inputs">
         <Show
           when={isEditing()}
           fallback={
-            <span class="dialkit-color-hex" onClick={() => setIsEditing(true)}>
+            <span class="design-kit-color-hex" onClick={() => setIsEditing(true)}>
               {(props.value ?? '').toUpperCase()}
             </span>
           }
@@ -58,7 +58,7 @@ export function ColorControl(props: ColorControlProps) {
           <input
             id={textInputId}
             type="text"
-            class="dialkit-color-hex-input"
+            class="design-kit-color-hex-input"
             value={editValue()}
             onInput={(e) => setEditValue(e.currentTarget.value)}
             onBlur={handleTextSubmit}
@@ -67,7 +67,7 @@ export function ColorControl(props: ColorControlProps) {
           />
         </Show>
         <button
-          class="dialkit-color-swatch"
+          class="design-kit-color-swatch"
           style={{ 'background-color': props.value }}
           onClick={() => colorInputRef?.click()}
           title="Pick color"
@@ -76,7 +76,7 @@ export function ColorControl(props: ColorControlProps) {
         <input
           ref={colorInputRef}
           type="color"
-          class="dialkit-color-picker-native"
+          class="design-kit-color-picker-native"
           aria-label={`${props.label} color picker`}
           value={props.value.length === 4 ? expandShorthandHex(props.value) : props.value.slice(0, 7)}
           onInput={(e) => props.onChange(e.currentTarget.value)}

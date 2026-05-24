@@ -1,13 +1,13 @@
 import { defineComponent, h, onMounted, onUnmounted, ref, type PropType } from 'vue';
-import { DialStore } from '../../store/DialStore';
-import type { SpringConfig } from '../../store/DialStore';
+import { DesignKitStore } from '../../store/DesignKitStore';
+import type { SpringConfig } from '../../store/DesignKitStore';
 import { Folder } from './Folder';
 import { Slider } from './Slider';
 import { SegmentedControl } from './SegmentedControl';
 import { SpringVisualization } from './SpringVisualization';
 
 export const SpringControl = defineComponent({
-  name: 'DialKitSpringControl',
+  name: 'DesignKitSpringControl',
   props: {
     panelId: { type: String, required: true },
     path: { type: String, required: true },
@@ -19,12 +19,12 @@ export const SpringControl = defineComponent({
   },
   emits: ['change'],
   setup(props, { emit }) {
-    const mode = ref<'simple' | 'advanced'>(DialStore.getSpringMode(props.panelId, props.path));
+    const mode = ref<'simple' | 'advanced'>(DesignKitStore.getSpringMode(props.panelId, props.path));
     let unsub: (() => void) | undefined;
 
     onMounted(() => {
-      unsub = DialStore.subscribe(props.panelId, () => {
-        mode.value = DialStore.getSpringMode(props.panelId, props.path);
+      unsub = DesignKitStore.subscribe(props.panelId, () => {
+        mode.value = DesignKitStore.getSpringMode(props.panelId, props.path);
       });
     });
 
@@ -46,7 +46,7 @@ export const SpringControl = defineComponent({
         cache.advanced = { ...props.spring };
       }
 
-      DialStore.updateSpringMode(props.panelId, props.path, nextMode);
+      DesignKitStore.updateSpringMode(props.panelId, props.path, nextMode);
 
       if (nextMode === 'simple') {
         emit('change', cache.simple);
@@ -69,8 +69,8 @@ export const SpringControl = defineComponent({
       default: () => [
         h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } }, [
           h(SpringVisualization, { spring: props.spring, isSimpleMode: isSimpleMode() }),
-          h('div', { class: 'dialkit-labeled-control' }, [
-            h('span', { class: 'dialkit-labeled-control-label' }, 'Type'),
+          h('div', { class: 'design-kit-labeled-control' }, [
+            h('span', { class: 'design-kit-labeled-control-label' }, 'Type'),
             h(SegmentedControl, {
               options: [
                 { value: 'simple', label: 'Time' },

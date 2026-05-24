@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Spring } from 'svelte/motion';
   import Portal from '../Portal.svelte';
-  import { DialStore } from 'dialkit/store';
-  import type { Preset } from 'dialkit/store';
+  import { DesignKitStore } from 'design-kit/store';
+  import type { Preset } from 'design-kit/store';
   import { dropdownTransition } from './transitions';
   import { ICON_CHEVRON, ICON_TRASH } from '../../icons';
 
@@ -42,7 +42,7 @@
 
   $effect(() => {
     if (typeof document === 'undefined' || !triggerRef) return;
-    portalTarget = (triggerRef.closest('.dialkit-root') as HTMLElement | null) ?? document.body;
+    portalTarget = (triggerRef.closest('.design-kit-root') as HTMLElement | null) ?? document.body;
   });
 
   $effect(() => {
@@ -73,31 +73,31 @@
   });
 
   const handleSelect = (presetId: string | null) => {
-    if (presetId) DialStore.loadPreset(panelId, presetId);
-    else DialStore.clearActivePreset(panelId);
+    if (presetId) DesignKitStore.loadPreset(panelId, presetId);
+    else DesignKitStore.clearActivePreset(panelId);
     closeDropdown();
   };
 
   const handleDelete = (e: MouseEvent, presetId: string) => {
     e.stopPropagation();
-    DialStore.deletePreset(panelId, presetId);
+    DesignKitStore.deletePreset(panelId, presetId);
   };
 </script>
 
-<div class="dialkit-preset-manager">
+<div class="design-kit-preset-manager">
   <button
     bind:this={triggerRef}
-    class="dialkit-preset-trigger"
+    class="design-kit-preset-trigger"
     onclick={() => (isOpen ? closeDropdown() : openDropdown())}
     data-open={String(isOpen)}
     data-has-preset={String(!!activePreset)}
     data-disabled={String(!hasPresets)}
   >
-    <span class="dialkit-preset-label">
+    <span class="design-kit-preset-label">
       {activePreset ? activePreset.name : 'Version 1'}
     </span>
     <svg
-      class="dialkit-select-chevron"
+      class="design-kit-select-chevron"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -116,27 +116,27 @@
       {#if isOpen}
         <div
           bind:this={dropdownRef}
-          class="dialkit-root dialkit-preset-dropdown"
+          class="design-kit-root design-kit-preset-dropdown"
           style={`position:fixed;top:${pos.top}px;left:${pos.left}px;min-width:${pos.width}px;`}
           transition:dropdownTransition={{ above: false }}
         >
           <div
-            class="dialkit-preset-item"
+            class="design-kit-preset-item"
             data-active={String(!activePresetId)}
             onclick={() => handleSelect(null)}
           >
-            <span class="dialkit-preset-name">Version 1</span>
+            <span class="design-kit-preset-name">Version 1</span>
           </div>
 
           {#each presets as preset (preset.id)}
             <div
-              class="dialkit-preset-item"
+              class="design-kit-preset-item"
               data-active={String(preset.id === activePresetId)}
               onclick={() => handleSelect(preset.id)}
             >
-              <span class="dialkit-preset-name">{preset.name}</span>
+              <span class="design-kit-preset-name">{preset.name}</span>
               <button
-                class="dialkit-preset-delete"
+                class="design-kit-preset-delete"
                 onclick={(e) => handleDelete(e, preset.id)}
                 title="Delete preset"
               >

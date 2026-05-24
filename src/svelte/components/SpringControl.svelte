@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { DialStore } from 'dialkit/store';
-  import type { SpringConfig } from 'dialkit/store';
+  import { DesignKitStore } from 'design-kit/store';
+  import type { SpringConfig } from 'design-kit/store';
   import Folder from './Folder.svelte';
   import Slider from './Slider.svelte';
   import SegmentedControl from './SegmentedControl.svelte';
@@ -14,11 +14,11 @@
     onChange: (spring: SpringConfig) => void;
   }>();
 
-  let mode = $state<'simple' | 'advanced'>(DialStore.getSpringMode(panelId, path));
+  let mode = $state<'simple' | 'advanced'>(DesignKitStore.getSpringMode(panelId, path));
 
   $effect(() => {
-    const unsub = DialStore.subscribe(panelId, () => {
-      mode = DialStore.getSpringMode(panelId, path);
+    const unsub = DesignKitStore.subscribe(panelId, () => {
+      mode = DesignKitStore.getSpringMode(panelId, path);
     });
     return unsub;
   });
@@ -42,7 +42,7 @@
       cache.advanced = spring;
     }
 
-    DialStore.updateSpringMode(panelId, path, typedMode);
+    DesignKitStore.updateSpringMode(panelId, path, typedMode);
 
     if (typedMode === 'simple') {
       onChange(cache.simple);
@@ -66,8 +66,8 @@
   <div style="display: flex; flex-direction: column; gap: 6px;">
     <SpringVisualization {spring} isSimpleMode={isSimpleMode} />
 
-    <div class="dialkit-labeled-control">
-      <span class="dialkit-labeled-control-label">Type</span>
+    <div class="design-kit-labeled-control">
+      <span class="design-kit-labeled-control-label">Type</span>
       <SegmentedControl
         options={[
           { value: 'simple', label: 'Time' },

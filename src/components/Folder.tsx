@@ -53,27 +53,27 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
   };
 
   const folderContent = (
-    <div ref={isRoot ? contentRef : undefined} className={`dialkit-folder ${isRoot ? 'dialkit-folder-root' : ''}`}>
-      <div className={`dialkit-folder-header ${isRoot ? 'dialkit-panel-header' : ''}`} onClick={handleToggle}>
-        <div className="dialkit-folder-header-top">
+    <div ref={isRoot ? contentRef : undefined} className={`design-kit-folder ${isRoot ? 'design-kit-folder-root' : ''}`}>
+      <div className={`design-kit-folder-header ${isRoot ? 'design-kit-panel-header' : ''}`} onClick={handleToggle}>
+        <div className="design-kit-folder-header-top">
           {isRoot ? (
             isOpen && (
-              <div className="dialkit-folder-title-row">
-                <span className="dialkit-folder-title dialkit-folder-title-root">
+              <div className="design-kit-folder-title-row">
+                <span className="design-kit-folder-title design-kit-folder-title-root">
                   {title}
                 </span>
               </div>
             )
           ) : (
-            <div className="dialkit-folder-title-row">
-              <span className="dialkit-folder-title">
+            <div className="design-kit-folder-title-row">
+              <span className="design-kit-folder-title">
                 {title}
               </span>
             </div>
           )}
           {isRoot && !inline && (
             <svg
-              className="dialkit-panel-icon"
+              className="design-kit-panel-icon"
               viewBox="0 0 16 16"
               fill="none"
             >
@@ -85,7 +85,7 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
           )}
           {!isRoot && (
             <motion.svg
-              className="dialkit-folder-icon"
+              className="design-kit-folder-icon"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -102,7 +102,7 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
         </div>
 
         {isRoot && toolbar && isOpen && (
-          <div className="dialkit-panel-toolbar" onClick={(e) => e.stopPropagation()}>
+          <div className="design-kit-panel-toolbar" onClick={(e) => e.stopPropagation()}>
             {toolbar}
           </div>
         )}
@@ -111,14 +111,14 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
-            className="dialkit-folder-content"
+            className="design-kit-folder-content"
             initial={isRoot ? undefined : { height: 0, opacity: 0 }}
             animate={isRoot ? undefined : { height: 'auto', opacity: 1 }}
             exit={isRoot ? undefined : { height: 0, opacity: 0 }}
             transition={isRoot ? undefined : { type: 'spring', visualDuration: 0.35, bounce: 0.1 }}
             style={isRoot ? undefined : { clipPath: 'inset(0 -20px)' }}
           >
-            <div className="dialkit-folder-inner">{children}</div>
+            <div className="design-kit-folder-inner">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -128,7 +128,7 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
   if (isRoot) {
     if (inline) {
       return (
-        <div className="dialkit-panel-inner dialkit-panel-inline">
+        <div className="design-kit-panel-inner design-kit-panel-inline">
           {folderContent}
         </div>
       );
@@ -140,7 +140,7 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
 
     return (
       <motion.div
-        className="dialkit-panel-inner"
+        className="design-kit-panel-inner"
         style={panelStyle}
         onClick={!isOpen ? handleToggle : undefined}
         data-collapsed={isCollapsed}

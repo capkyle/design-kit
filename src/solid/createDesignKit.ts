@@ -1,13 +1,13 @@
 import { createSignal, createMemo, onMount, onCleanup, createUniqueId, type Accessor } from 'solid-js';
-import { DialStore } from '../store/DialStore';
-import type { DialConfig, ResolvedValues, DialValue, SpringConfig, SelectConfig, ColorConfig, TextConfig, ActionConfig, ShortcutConfig } from '../store/DialStore';
+import { DesignKitStore } from '../store/DesignKitStore';
+import type { DesignConfig, ResolvedValues, DesignValue, SpringConfig, SelectConfig, ColorConfig, TextConfig, ActionConfig, ShortcutConfig } from '../store/DesignKitStore';
 
 export interface CreateDialOptions {
   onAction?: (action: string) => void;
   shortcuts?: Record<string, ShortcutConfig>;
 }
 
-export function createDialKit<T extends DialConfig>(
+export function createDesignKit<T extends DesignConfig>(
   name: string,
   config: T,
   options?: CreateDialOptions
@@ -15,26 +15,26 @@ export function createDialKit<T extends DialConfig>(
   const id = createUniqueId();
   const panelId = `${name}-${id}`;
 
-  const [values, setValues] = createSignal<Record<string, DialValue>>(
-    DialStore.getValues(panelId)
+  const [values, setValues] = createSignal<Record<string, DesignValue>>(
+    DesignKitStore.getValues(panelId)
   );
 
   onMount(() => {
-    DialStore.registerPanel(panelId, name, config, options?.shortcuts);
-    setValues(DialStore.getValues(panelId));
+    DesignKitStore.registerPanel(panelId, name, config, options?.shortcuts);
+    setValues(DesignKitStore.getValues(panelId));
 
-    const unsubValues = DialStore.subscribe(panelId, () => {
-      setValues(DialStore.getValues(panelId));
+    const unsubValues = DesignKitStore.subscribe(panelId, () => {
+      setValues(DesignKitStore.getValues(panelId));
     });
 
     const unsubActions = options?.onAction
-      ? DialStore.subscribeActions(panelId, options.onAction)
+      ? DesignKitStore.subscribeActions(panelId, options.onAction)
       : undefined;
 
     onCleanup(() => {
       unsubValues();
       unsubActions?.();
-      DialStore.unregisterPanel(panelId);
+      DesignKitStore.unregisterPanel(panelId);
     });
   });
 
@@ -42,8 +42,8 @@ export function createDialKit<T extends DialConfig>(
 }
 
 function buildResolvedValues(
-  config: DialConfig,
-  flatValues: Record<string, DialValue>,
+  config: DesignConfig,
+  flatValues: Record<string, DesignValue>,
   prefix: string
 ): Record<string, unknown> {
   const result: Record<string, unknown> = {};
@@ -68,7 +68,7 @@ function buildResolvedValues(
     } else if (isTextConfig(configValue)) {
       result[key] = flatValues[path] ?? configValue.default ?? '';
     } else if (typeof configValue === 'object' && configValue !== null) {
-      result[key] = buildResolvedValues(configValue as DialConfig, flatValues, path);
+      result[key] = buildResolvedValues(configValue as DesignConfig, flatValues, path);
     }
   }
 

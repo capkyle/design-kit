@@ -1,10 +1,10 @@
 // Core API
-export { createDialKit } from './createDialKit';
-export type { CreateDialOptions } from './createDialKit';
+export { createDesignKit } from './createDesignKit';
+export type { CreateDialOptions } from './createDesignKit';
 
 // Root component
-export { DialRoot } from './components/DialRoot';
-export type { DialPosition, DialMode, DialTheme } from './components/DialRoot';
+export { DesignKitRoot } from './components/DesignKitRoot';
+export type { DesignPosition, DesignMode, DesignTheme } from './components/DesignKitRoot';
 
 // Component exports
 export { Slider } from './components/Slider';
@@ -19,7 +19,7 @@ export { ColorControl } from './components/ColorControl';
 export { PresetManager } from './components/PresetManager';
 
 // Store exports
-export { DialStore } from '../store/DialStore';
+export { DesignKitStore } from '../store/DesignKitStore';
 export type {
   SpringConfig,
   ActionConfig,
@@ -28,9 +28,9 @@ export type {
   TextConfig,
   ShortcutConfig,
   Preset,
-  DialValue,
-  DialConfig,
+  DesignValue,
+  DesignConfig,
   ResolvedValues,
   ControlMeta,
   PanelConfig,
-} from '../store/DialStore';
+} from '../store/DesignKitStore';

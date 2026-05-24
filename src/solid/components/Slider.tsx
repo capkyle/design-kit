@@ -1,6 +1,6 @@
 import { createSignal, createEffect, onMount, onCleanup, Show } from 'solid-js';
 import { animate, motionValue } from 'motion';
-import type { ShortcutConfig } from '../../store/DialStore';
+import type { ShortcutConfig } from '../../store/DesignKitStore';
 import {
   decimalsForStep,
   roundValue,
@@ -353,20 +353,20 @@ export function Slider(props: SliderProps) {
     if (ds <= 10) {
       return Array.from({ length: ds - 1 }, (_, i) => {
         const pct = ((i + 1) * step()) / (max() - min()) * 100;
-        return <div class="dialkit-slider-hashmark" style={{ left: `${pct}%` }} />;
+        return <div class="design-kit-slider-hashmark" style={{ left: `${pct}%` }} />;
       });
     }
     return Array.from({ length: 9 }, (_, i) => {
       const pct = (i + 1) * 10;
-      return <div class="dialkit-slider-hashmark" style={{ left: `${pct}%` }} />;
+      return <div class="design-kit-slider-hashmark" style={{ left: `${pct}%` }} />;
     });
   };
 
   return (
-    <div ref={wrapperRef} class="dialkit-slider-wrapper">
+    <div ref={wrapperRef} class="design-kit-slider-wrapper">
       <div
         ref={trackRef}
-        class={`dialkit-slider ${isActive() ? 'dialkit-slider-active' : ''}`}
+        class={`design-kit-slider ${isActive() ? 'design-kit-slider-active' : ''}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -374,11 +374,11 @@ export function Slider(props: SliderProps) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div class="dialkit-slider-hashmarks">{hashMarks()}</div>
+        <div class="design-kit-slider-hashmarks">{hashMarks()}</div>
 
         <div
           ref={fillRef}
-          class="dialkit-slider-fill"
+          class="design-kit-slider-fill"
           style={{
             width: `${fillPercent.get()}%`,
           }}
@@ -386,7 +386,7 @@ export function Slider(props: SliderProps) {
 
         <div
           ref={handleRef}
-          class="dialkit-slider-handle"
+          class="design-kit-slider-handle"
           style={{
             left: `max(5px, calc(${fillPercent.get()}% - 9px))`,
             transform: 'translateY(-50%) scaleX(0.25) scaleY(1)',
@@ -394,10 +394,10 @@ export function Slider(props: SliderProps) {
           }}
         />
 
-        <span ref={labelRef} class="dialkit-slider-label">
+        <span ref={labelRef} class="design-kit-slider-label">
           {props.label}
           <Show when={props.shortcut}>
-            <span class={`dialkit-shortcut-pill${props.shortcutActive ? ' dialkit-shortcut-pill-active' : ''}`}>
+            <span class={`design-kit-shortcut-pill${props.shortcutActive ? ' design-kit-shortcut-pill-active' : ''}`}>
               {formatSliderShortcut(props.shortcut!)}
             </span>
           </Show>
@@ -407,7 +407,7 @@ export function Slider(props: SliderProps) {
           <input
             ref={inputRef}
             type="text"
-            class="dialkit-slider-input"
+            class="design-kit-slider-input"
             value={inputValue()}
             onInput={(e) => setInputValue(e.currentTarget.value)}
             onKeyDown={handleInputKeyDown}
@@ -418,7 +418,7 @@ export function Slider(props: SliderProps) {
         ) : (
           <span
             ref={valueSpanRef}
-            class={`dialkit-slider-value ${isValueEditable() ? 'dialkit-slider-value-editable' : ''}`}
+            class={`design-kit-slider-value ${isValueEditable() ? 'design-kit-slider-value-editable' : ''}`}
             onMouseEnter={() => setIsValueHovered(true)}
             onMouseLeave={() => setIsValueHovered(false)}
             onClick={handleValueClick}

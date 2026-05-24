@@ -1,10 +1,10 @@
-# dialkit v1.2.0
+# design-kit v1.2.0
 
-<img src="https://joshpuckett.me/images/dialkit.png" width="100%" />
+<img src="https://joshpuckett.me/images/design-kit.png" width="100%" />
 
 Real-time parameter tweaking for React, Solid, Svelte, and Vue, created by Josh Puckett.
 
-To learn more about how I use DialKit, and approach design in general, feel free to check out [Interface Craft](http://interfacecraft.dev/).
+To learn more about how I use DesignKit, and approach design in general, feel free to check out [Interface Craft](http://interfacecraft.dev/).
 
 ## Contributing
 
@@ -15,20 +15,20 @@ To learn more about how I use DialKit, and approach design in general, feel free
 ## Quick Start
 
 ```bash
-npm install dialkit motion
+npm install design-kit motion
 ```
 
 ```tsx
 // layout.tsx
-import { DialRoot } from 'dialkit';
-import 'dialkit/styles.css';
+import { DesignKitRoot } from 'design-kit';
+import 'design-kit/styles.css';
 
 export default function Layout({ children }) {
   return (
     <html>
       <body>
         {children}
-        <DialRoot />
+        <DesignKitRoot />
       </body>
     </html>
   );
@@ -37,10 +37,10 @@ export default function Layout({ children }) {
 
 ```tsx
 // component.tsx
-import { useDialKit } from 'dialkit';
+import { useDesignKit } from 'design-kit';
 
 function Card() {
-  const p = useDialKit('Card', {
+  const p = useDesignKit('Card', {
     blur: [24, 0, 100],
     scale: 1.2,
     color: '#ff5500',
@@ -62,16 +62,16 @@ function Card() {
 
 ---
 
-## useDialKit
+## useDesignKit
 
 ```tsx
-const params = useDialKit(name, config, options?)
+const params = useDesignKit(name, config, options?)
 ```
 
 | Param | Type | Description |
 |-------|------|-------------|
 | `name` | `string` | Panel title displayed in the UI |
-| `config` | `DialConfig` | Parameter definitions (see Control Types below) |
+| `config` | `DesignConfig` | Parameter definitions (see Control Types below) |
 | `options.onAction` | `(path: string) => void` | Callback when action buttons are clicked |
 | `options.shortcuts` | `Record<string, ShortcutConfig>` | Keyboard shortcuts for controls (see [Keyboard Shortcuts](#keyboard-shortcuts)) |
 
@@ -192,7 +192,7 @@ Creates a visual spring editor with a live animation curve preview. The editor s
 The returned config object is passed directly to Motion's `transition` prop:
 
 ```tsx
-const p = useDialKit('Card', {
+const p = useDesignKit('Card', {
   spring: { type: 'spring', visualDuration: 0.5, bounce: 0.04 },
   x: [0, -200, 200],
 });
@@ -205,7 +205,7 @@ const p = useDialKit('Card', {
 ### Action
 
 ```tsx
-const p = useDialKit('Controls', {
+const p = useDesignKit('Controls', {
   shuffle: { type: 'action' },
   reset: { type: 'action', label: 'Reset All' },
 }, {
@@ -245,22 +245,22 @@ shadow: {
 }
 ```
 
-DialKit also supports dynamic config updates. If your config shape, defaults, options, or labels change over time, the panel updates while preserving current values where paths still exist.
+DesignKit also supports dynamic config updates. If your config shape, defaults, options, or labels change over time, the panel updates while preserving current values where paths still exist.
 
 Dynamic configs work with both inline objects and memoized configs — no special consumer action needed:
 
 ```tsx
-const values = useDialKit('Controls', {
+const values = useDesignKit('Controls', {
   style: { type: 'select', options: dynamicOptions },
 });
 ```
 
 ---
 
-## DialRoot
+## DesignKitRoot
 
 ```tsx
-<DialRoot position="top-right" />
+<DesignKitRoot position="top-right" />
 ```
 
 | Prop | Type | Default |
@@ -272,10 +272,10 @@ const values = useDialKit('Controls', {
 
 Mount once at your app root. In the default `popover` mode, the panel renders via a portal on `document.body`. It collapses to a small icon button and expands to 280px wide on click.
 
-DialKit is automatically hidden in production builds. To enable it in production, pass `productionEnabled`:
+DesignKit is automatically hidden in production builds. To enable it in production, pass `productionEnabled`:
 
 ```tsx
-<DialRoot productionEnabled />
+<DesignKitRoot productionEnabled />
 ```
 
 ### Draggable panel
@@ -284,26 +284,26 @@ In popover mode, the collapsed panel bubble can be dragged to any position on th
 
 ### Inline mode
 
-Use `mode="inline"` to render DialKit directly in your layout instead of as a floating popover. The panel fills its container and scrolls internally, which is useful for embedding in a sidebar or resizable panel. Inline mode works across all frameworks:
+Use `mode="inline"` to render DesignKit directly in your layout instead of as a floating popover. The panel fills its container and scrolls internally, which is useful for embedding in a sidebar or resizable panel. Inline mode works across all frameworks:
 
 **React:**
 ```tsx
 <aside style={{ width: 300, height: '100vh', overflow: 'hidden' }}>
-  <DialRoot mode="inline" />
+  <DesignKitRoot mode="inline" />
 </aside>
 ```
 
 **Solid:**
 ```tsx
 <aside style={{ width: '300px', height: '100vh', overflow: 'hidden' }}>
-  <DialRoot mode="inline" />
+  <DesignKitRoot mode="inline" />
 </aside>
 ```
 
 **Svelte:**
 ```svelte
 <aside style:width="300px" style:height="100vh" style:overflow="hidden">
-  <DialRoot mode="inline" />
+  <DesignKitRoot mode="inline" />
 </aside>
 ```
 
@@ -325,7 +325,7 @@ When the panel is open, the toolbar provides:
 Assign keyboard shortcuts to controls so you can adjust values without touching the panel. Pass a `shortcuts` map in the options object:
 
 ```tsx
-const p = useDialKit('Card', {
+const p = useDesignKit('Card', {
   blur: [24, 0, 100],
   scale: 1.2,
   opacity: [1, 0, 1],
@@ -405,11 +405,11 @@ Shortcuts are automatically disabled when a text input is focused.
 ## Full Example
 
 ```tsx
-import { useDialKit } from 'dialkit';
+import { useDesignKit } from 'design-kit';
 import { motion } from 'motion/react';
 
 function PhotoStack() {
-  const p = useDialKit('Photo Stack', {
+  const p = useDesignKit('Photo Stack', {
     // Text inputs
     title: 'Japan',
     subtitle: { type: 'text', default: 'December 2025', placeholder: 'Enter subtitle...' },
@@ -467,22 +467,22 @@ function PhotoStack() {
 
 ## Solid
 
-DialKit also works with Solid. Import from `dialkit/solid` instead of `dialkit` — the API mirrors the React version, with `createDialKit` replacing `useDialKit` and `DialRoot` as a Solid component.
+DesignKit also works with Solid. Import from `design-kit/solid` instead of `design-kit` — the API mirrors the React version, with `createDesignKit` replacing `useDesignKit` and `DesignKitRoot` as a Solid component.
 
 ```bash
-npm install dialkit solid-js
+npm install design-kit solid-js
 ```
 
 ```tsx
 // App.tsx
-import { DialRoot } from 'dialkit/solid';
-import 'dialkit/styles.css';
+import { DesignKitRoot } from 'design-kit/solid';
+import 'design-kit/styles.css';
 
 export default function App() {
   return (
     <>
       <MyComponent />
-      <DialRoot />
+      <DesignKitRoot />
     </>
   );
 }
@@ -490,10 +490,10 @@ export default function App() {
 
 ```tsx
 // component.tsx
-import { createDialKit } from 'dialkit/solid';
+import { createDesignKit } from 'design-kit/solid';
 
 function Card() {
-  const params = createDialKit('Card', {
+  const params = createDesignKit('Card', {
     blur: [24, 0, 100],
     scale: 1.2,
     color: '#ff5500',
@@ -513,35 +513,35 @@ function Card() {
 }
 ```
 
-`createDialKit` returns an accessor — call `params()` to read the current values. All control types, config shapes, and panel features (presets, copy, folders) work identically to the React version.
+`createDesignKit` returns an accessor — call `params()` to read the current values. All control types, config shapes, and panel features (presets, copy, folders) work identically to the React version.
 
 ---
 
 ## Svelte
 
-DialKit works with Svelte 5 (≥5.8.0). Import from `dialkit/svelte` — no extra dependencies needed.
+DesignKit works with Svelte 5 (≥5.8.0). Import from `design-kit/svelte` — no extra dependencies needed.
 
 ```bash
-npm install dialkit
+npm install design-kit
 ```
 
 ```svelte
 <!-- +layout.svelte -->
 <script>
-  import { DialRoot } from 'dialkit/svelte';
+  import { DesignKitRoot } from 'design-kit/svelte';
   let { children } = $props();
 </script>
 
 {@render children()}
-<DialRoot />
+<DesignKitRoot />
 ```
 
 ```svelte
 <!-- Card.svelte -->
 <script>
-  import { createDialKit } from 'dialkit/svelte';
+  import { createDesignKit } from 'design-kit/svelte';
 
-  const params = createDialKit('Card', {
+  const params = createDesignKit('Card', {
     blur: [24, 0, 100],
     scale: 1.2,
     color: '#ff5500',
@@ -554,23 +554,23 @@ npm install dialkit
 </div>
 ```
 
-`createDialKit` returns a reactive object — access values directly (e.g. `params.blur`). Styles are injected automatically by `DialRoot` (no CSS import needed). Cleanup is automatic when the component unmounts. All control types, presets, folders, and transitions match the React/Solid entries.
+`createDesignKit` returns a reactive object — access values directly (e.g. `params.blur`). Styles are injected automatically by `DesignKitRoot` (no CSS import needed). Cleanup is automatic when the component unmounts. All control types, presets, folders, and transitions match the React/Solid entries.
 
 ---
 
 ## Vue
 
-DialKit works with Vue 3 (≥3.3.0). Import from `dialkit/vue`.
+DesignKit works with Vue 3 (≥3.3.0). Import from `design-kit/vue`.
 
 ```bash
-npm install dialkit motion-v vue
+npm install design-kit motion-v vue
 ```
 
 ```ts
 // main.ts
 import { createApp } from 'vue';
-import { DialRoot } from 'dialkit/vue';
-import 'dialkit/styles.css';
+import { DesignKitRoot } from 'design-kit/vue';
+import 'design-kit/styles.css';
 import App from './App.vue';
 
 const app = createApp(App);
@@ -580,22 +580,22 @@ app.mount('#app');
 ```vue
 <!-- App.vue -->
 <script setup>
-import { DialRoot } from 'dialkit/vue';
+import { DesignKitRoot } from 'design-kit/vue';
 import Card from './Card.vue';
 </script>
 
 <template>
   <Card />
-  <DialRoot />
+  <DesignKitRoot />
 </template>
 ```
 
 ```vue
 <!-- Card.vue -->
 <script setup>
-import { useDialKit } from 'dialkit/vue';
+import { useDesignKit } from 'design-kit/vue';
 
-const params = useDialKit('Card', {
+const params = useDesignKit('Card', {
   blur: [24, 0, 100],
   scale: 1.2,
   color: '#ff5500',
@@ -615,7 +615,7 @@ const params = useDialKit('Card', {
 </template>
 ```
 
-`useDialKit` returns a reactive object. All control types, presets, folders, keyboard shortcuts, and transitions work identically to the other frameworks.
+`useDesignKit` returns a reactive object. All control types, presets, folders, keyboard shortcuts, and transitions work identically to the other frameworks.
 
 ---
 
@@ -632,13 +632,13 @@ import type {
   TextConfig,
   ShortcutConfig,
   ShortcutMode,
-  DialConfig,
-  DialValue,
+  DesignConfig,
+  DesignValue,
   ResolvedValues,
   ControlMeta,
   PanelConfig,
   Preset,
-} from 'dialkit';
+} from 'design-kit';
 ```
 
 Return values are fully typed: `params.blur` infers as `number`, `params.color` as `string`, `params.spring` as `SpringConfig`, `params.shadow` as a nested object, etc.

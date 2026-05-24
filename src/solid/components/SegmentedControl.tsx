@@ -42,11 +42,11 @@ export function SegmentedControl<T extends string>(props: SegmentedControlProps<
   };
 
   return (
-    <div class="dialkit-segmented" ref={containerRef}>
+    <div class="design-kit-segmented" ref={containerRef}>
       <Show when={pillStyle()}>
         {(style) => (
           <div
-            class="dialkit-segmented-pill"
+            class="design-kit-segmented-pill"
             style={{
               left: `${style().left}px`,
               width: `${style().width}px`,
@@ -59,7 +59,7 @@ export function SegmentedControl<T extends string>(props: SegmentedControlProps<
         {(option) => (
           <button
             onClick={() => props.onChange(option.value)}
-            class="dialkit-segmented-button"
+            class="design-kit-segmented-button"
             data-active={String(props.value === option.value)}
           >
             {option.label}

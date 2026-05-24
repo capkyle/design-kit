@@ -1,61 +1,66 @@
-import { DialStore } from 'dialkit/store';
-import type {
-  ActionConfig,
-  ColorConfig,
-  DialConfig,
-  DialValue,
-  EasingConfig,
-  ResolvedValues,
-  SelectConfig,
-  ShortcutConfig,
-  SpringConfig,
-  TextConfig,
-} from 'dialkit/store';
+import { useEffect, useId, useSyncExternalStore, useRef } from 'react';
+import { DesignKitStore, DesignConfig, DesignValue, ResolvedValues, SpringConfig, EasingConfig, SelectConfig, ColorConfig, TextConfig, ActionConfig, ShortcutConfig } from '../store/DesignKitStore';
 
-export interface CreateDialOptions {
+export interface UseDialOptions {
   onAction?: (action: string) => void;
   shortcuts?: Record<string, ShortcutConfig>;
 }
 
-export type DialKitValues<T> = T;
-
-let dialKitInstance = 0;
-
-export function createDialKit<T extends DialConfig>(
+export function useDesignKit<T extends DesignConfig>(
   name: string,
   config: T,
-  options?: CreateDialOptions
-): DialKitValues<ResolvedValues<T>> {
-  const panelId = `${name}-${++dialKitInstance}`;
-  const resolve = () => buildResolvedValues(config, DialStore.getValues(panelId), '') as ResolvedValues<T>;
+  options?: UseDialOptions
+): ResolvedValues<T> {
+  const instanceId = useId();
+  const panelId = `${name}-${instanceId}`;
+  const configRef = useRef(config);
+  const serializedConfig = JSON.stringify(config);
+  configRef.current = config;
+  const onActionRef = useRef(options?.onAction);
+  onActionRef.current = options?.onAction;
+  const shortcutsRef = useRef(options?.shortcuts);
+  shortcutsRef.current = options?.shortcuts;
+  const serializedShortcuts = JSON.stringify(options?.shortcuts);
 
-  let values = $state<ResolvedValues<T>>(resolve());
+  // Register panel on mount
+  useEffect(() => {
+    DesignKitStore.registerPanel(panelId, name, configRef.current, shortcutsRef.current);
+    return () => DesignKitStore.unregisterPanel(panelId);
+  }, [panelId, name]);
 
-  $effect(() => {
-    DialStore.registerPanel(panelId, name, config, options?.shortcuts);
-    values = resolve();
+  // Update panel when config structure or shortcuts change
+  const mountedRef = useRef(false);
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+    DesignKitStore.updatePanel(panelId, name, configRef.current, shortcutsRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [panelId, name, serializedConfig, serializedShortcuts]);
 
-    const unsubValues = DialStore.subscribe(panelId, () => {
-      values = resolve();
+  // Subscribe to action events
+  useEffect(() => {
+    return DesignKitStore.subscribeActions(panelId, (action) => {
+      onActionRef.current?.(action);
     });
+  }, [panelId]);
 
-    const unsubActions = options?.onAction
-      ? DialStore.subscribeActions(panelId, options.onAction)
-      : undefined;
+  // Subscribe to changes
+  // DesignKitStore.getValues returns a stable empty object when panel not registered
+  const values = useSyncExternalStore(
+    (callback) => DesignKitStore.subscribe(panelId, callback),
+    () => DesignKitStore.getValues(panelId),
+    () => DesignKitStore.getValues(panelId)
+  );
 
-    return () => {
-      unsubValues();
-      unsubActions?.();
-      DialStore.unregisterPanel(panelId);
-    };
-  });
-
-  return values;
+  // Build resolved values object
+  return buildResolvedValues(config, values, '') as ResolvedValues<T>;
 }
 
 function buildResolvedValues(
-  config: DialConfig,
-  flatValues: Record<string, DialValue>,
+  config: DesignConfig,
+  flatValues: Record<string, DesignValue>,
   prefix: string
 ): Record<string, unknown> {
   const result: Record<string, unknown> = {};
@@ -65,6 +70,7 @@ function buildResolvedValues(
     const path = prefix ? `${prefix}.${key}` : key;
 
     if (Array.isArray(configValue) && configValue.length <= 4 && typeof configValue[0] === 'number') {
+      // Range tuple
       result[key] = flatValues[path] ?? configValue[0];
     } else if (typeof configValue === 'number' || typeof configValue === 'boolean' || typeof configValue === 'string') {
       result[key] = flatValues[path] ?? configValue;
@@ -73,14 +79,18 @@ function buildResolvedValues(
     } else if (isActionConfig(configValue)) {
       result[key] = flatValues[path] ?? configValue;
     } else if (isSelectConfig(configValue)) {
+      // Select config resolves to string value
       const defaultValue = configValue.default ?? getFirstOptionValue(configValue.options);
       result[key] = flatValues[path] ?? defaultValue;
     } else if (isColorConfig(configValue)) {
+      // Color config resolves to string value
       result[key] = flatValues[path] ?? configValue.default ?? '#000000';
     } else if (isTextConfig(configValue)) {
+      // Text config resolves to string value
       result[key] = flatValues[path] ?? configValue.default ?? '';
     } else if (typeof configValue === 'object' && configValue !== null) {
-      result[key] = buildResolvedValues(configValue as DialConfig, flatValues, path);
+      // Nested object
+      result[key] = buildResolvedValues(configValue as DesignConfig, flatValues, path);
     }
   }
 

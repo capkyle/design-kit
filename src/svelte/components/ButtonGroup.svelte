@@ -7,9 +7,9 @@
   let { buttons } = $props<{ buttons: ButtonAction[] }>();
 </script>
 
-<div class="dialkit-button-group">
+<div class="design-kit-button-group">
   {#each buttons as button (button.label)}
-    <button class="dialkit-button" onclick={button.onClick}>
+    <button class="design-kit-button" onclick={button.onClick}>
       {button.label}
     </button>
   {/each}

@@ -7,11 +7,11 @@ interface TextControlProps {
 
 export function TextControl({ label, value, onChange, placeholder }: TextControlProps) {
   return (
-    <div className="dialkit-text-control">
-      <label className="dialkit-text-label">{label}</label>
+    <div className="design-kit-text-control">
+      <label className="design-kit-text-label">{label}</label>
       <input
         type="text"
-        className="dialkit-text-input"
+        className="design-kit-text-input"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

@@ -1,4 +1,4 @@
-import { SpringConfig, EasingConfig, TransitionConfig, DialStore } from '../store/DialStore';
+import { SpringConfig, EasingConfig, TransitionConfig, DesignKitStore } from '../store/DesignKitStore';
 import { Folder } from './Folder';
 import { Slider } from './Slider';
 import { SegmentedControl } from './SegmentedControl';
@@ -18,9 +18,9 @@ type CurveMode = 'easing' | 'simple' | 'advanced';
 
 export function TransitionControl({ panelId, path, label, value, onChange }: TransitionControlProps) {
   const mode = useSyncExternalStore(
-    (cb) => DialStore.subscribe(panelId, cb),
-    () => DialStore.getTransitionMode(panelId, path),
-    () => DialStore.getTransitionMode(panelId, path)
+    (cb) => DesignKitStore.subscribe(panelId, cb),
+    () => DesignKitStore.getTransitionMode(panelId, path),
+    () => DesignKitStore.getTransitionMode(panelId, path)
   );
 
   const isEasing = mode === 'easing';
@@ -50,7 +50,7 @@ export function TransitionControl({ panelId, path, label, value, onChange }: Tra
   const easing: EasingConfig = value.type === 'easing' ? value : cache.current.easing;
 
   const handleModeChange = (newMode: CurveMode) => {
-    DialStore.updateTransitionMode(panelId, path, newMode);
+    DesignKitStore.updateTransitionMode(panelId, path, newMode);
 
     if (newMode === 'easing') {
       onChange(cache.current.easing);
@@ -86,8 +86,8 @@ export function TransitionControl({ panelId, path, label, value, onChange }: Tra
           <SpringVisualization spring={spring} isSimpleMode={isSimpleSpring} />
         )}
 
-        <div className="dialkit-labeled-control">
-          <span className="dialkit-labeled-control-label">Type</span>
+        <div className="design-kit-labeled-control">
+          <span className="design-kit-labeled-control-label">Type</span>
           <SegmentedControl
             options={[
               { value: 'easing' as const, label: 'Easing' },
@@ -159,11 +159,11 @@ function EaseTextInput({ ease, onChange }: { ease: [number, number, number, numb
   };
 
   return (
-    <div className="dialkit-labeled-control">
-      <span className="dialkit-labeled-control-label">Ease</span>
+    <div className="design-kit-labeled-control">
+      <span className="design-kit-labeled-control-label">Ease</span>
       <input
         type="text"
-        className="dialkit-text-input"
+        className="design-kit-text-input"
         value={editing ? draft : formatEase(ease)}
         onChange={(e) => setDraft(e.target.value)}
         onFocus={handleFocus}

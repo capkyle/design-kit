@@ -40,10 +40,10 @@ export function SegmentedControl<T extends string>({
   hasAnimated.current = true;
 
   return (
-    <div className="dialkit-segmented" ref={containerRef}>
+    <div className="design-kit-segmented" ref={containerRef}>
       {pillStyle && (
         <div
-          className="dialkit-segmented-pill"
+          className="design-kit-segmented-pill"
           style={{
             left: pillStyle.left,
             width: pillStyle.width,
@@ -60,7 +60,7 @@ export function SegmentedControl<T extends string>({
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            className="dialkit-segmented-button"
+            className="design-kit-segmented-button"
             data-active={String(isActive)}
           >
             {option.label}

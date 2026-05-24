@@ -1,10 +1,10 @@
 // Core API
-export { createDialKit } from './createDialKit.svelte';
-export type { CreateDialOptions, DialKitValues } from './createDialKit.svelte';
+export { createDesignKit } from './createDesignKit.svelte';
+export type { CreateDialOptions, DesignKitValues } from './createDesignKit.svelte';
 
 // Root component
-export { default as DialRoot } from './components/DialRoot.svelte';
-export type { DialPosition, DialMode, DialTheme } from './components/DialRoot.svelte';
+export { default as DesignKitRoot } from './components/DesignKitRoot.svelte';
+export type { DesignPosition, DesignMode, DesignTheme } from './components/DesignKitRoot.svelte';
 
 // Shortcut components
 export { default as ShortcutListener } from './components/ShortcutListener.svelte';
@@ -26,8 +26,8 @@ export { default as SelectControl } from './components/SelectControl.svelte';
 export { default as ColorControl } from './components/ColorControl.svelte';
 export { default as PresetManager } from './components/PresetManager.svelte';
 
-// Store exports (via dialkit/store subpath — svelte-package doesn't bundle, so relative paths to src/store would break in dist)
-export { DialStore } from 'dialkit/store';
+// Store exports (via design-kit/store subpath — svelte-package doesn't bundle, so relative paths to src/store would break in dist)
+export { DesignKitStore } from 'design-kit/store';
 export type {
   SpringConfig,
   EasingConfig,
@@ -38,9 +38,9 @@ export type {
   TextConfig,
   ShortcutConfig,
   Preset,
-  DialValue,
-  DialConfig,
+  DesignValue,
+  DesignConfig,
   ResolvedValues,
   ControlMeta,
   PanelConfig,
-} from 'dialkit/store';
+} from 'design-kit/store';

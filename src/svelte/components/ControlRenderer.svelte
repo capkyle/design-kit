@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import { DialStore } from 'dialkit/store';
-  import type { ControlMeta, DialValue, SpringConfig, TransitionConfig } from 'dialkit/store';
+  import { DesignKitStore } from 'design-kit/store';
+  import type { ControlMeta, DesignValue, SpringConfig, TransitionConfig } from 'design-kit/store';
   import Slider from './Slider.svelte';
   import Toggle from './Toggle.svelte';
   import Folder from './Folder.svelte';
@@ -17,7 +17,7 @@
   let { panelId, control, values } = $props<{
     panelId: string;
     control: ControlMeta;
-    values: Record<string, DialValue>;
+    values: Record<string, DesignValue>;
   }>();
 
   const shortcutCtx = getContext<ShortcutContextValue | undefined>(SHORTCUT_CTX);
@@ -32,7 +32,7 @@
   <Slider
     label={control.label}
     value={controlValue as number}
-    onChange={(v) => DialStore.updateValue(panelId, control.path, v)}
+    onChange={(v) => DesignKitStore.updateValue(panelId, control.path, v)}
     min={control.min}
     max={control.max}
     step={control.step}
@@ -43,7 +43,7 @@
   <Toggle
     label={control.label}
     checked={controlValue as boolean}
-    onChange={(v) => DialStore.updateValue(panelId, control.path, v)}
+    onChange={(v) => DesignKitStore.updateValue(panelId, control.path, v)}
     shortcut={control.shortcut}
     shortcutActive={isShortcutActive}
   />
@@ -53,7 +53,7 @@
     path={control.path}
     label={control.label}
     spring={controlValue as SpringConfig}
-    onChange={(v) => DialStore.updateValue(panelId, control.path, v)}
+    onChange={(v) => DesignKitStore.updateValue(panelId, control.path, v)}
   />
 {:else if control.type === 'transition'}
   <TransitionControl
@@ -61,7 +61,7 @@
     path={control.path}
     label={control.label}
     value={controlValue as TransitionConfig}
-    onChange={(v) => DialStore.updateValue(panelId, control.path, v)}
+    onChange={(v) => DesignKitStore.updateValue(panelId, control.path, v)}
   />
 {:else if control.type === 'folder'}
   <Folder title={control.label} defaultOpen={control.defaultOpen ?? true}>
@@ -73,7 +73,7 @@
   <TextControl
     label={control.label}
     value={controlValue as string}
-    onChange={(v) => DialStore.updateValue(panelId, control.path, v)}
+    onChange={(v) => DesignKitStore.updateValue(panelId, control.path, v)}
     placeholder={control.placeholder}
   />
 {:else if control.type === 'select'}
@@ -81,16 +81,16 @@
     label={control.label}
     value={controlValue as string}
     options={control.options ?? []}
-    onChange={(v) => DialStore.updateValue(panelId, control.path, v)}
+    onChange={(v) => DesignKitStore.updateValue(panelId, control.path, v)}
   />
 {:else if control.type === 'color'}
   <ColorControl
     label={control.label}
     value={controlValue as string}
-    onChange={(v) => DialStore.updateValue(panelId, control.path, v)}
+    onChange={(v) => DesignKitStore.updateValue(panelId, control.path, v)}
   />
 {:else if control.type === 'action'}
-  <button class="dialkit-button" onclick={() => DialStore.triggerAction(panelId, control.path)}>
+  <button class="design-kit-button" onclick={() => DesignKitStore.triggerAction(panelId, control.path)}>
     {control.label}
   </button>
 {/if}

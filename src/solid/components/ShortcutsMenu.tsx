@@ -1,7 +1,7 @@
 import { createSignal, createEffect, onCleanup, Show, For } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import { animate } from 'motion';
-import { DialStore, ShortcutConfig } from '../../store/DialStore';
+import { DesignKitStore, ShortcutConfig } from '../../store/DesignKitStore';
 
 interface ShortcutsMenuProps {
   panelId: string;
@@ -101,7 +101,7 @@ export function ShortcutsMenu(props: ShortcutsMenuProps) {
     dropdownExitAnim?.stop();
   });
 
-  const panel = () => DialStore.getPanel(props.panelId);
+  const panel = () => DesignKitStore.getPanel(props.panelId);
 
   const rows = () => {
     const p = panel();
@@ -132,7 +132,7 @@ export function ShortcutsMenu(props: ShortcutsMenuProps) {
     <>
       <button
         ref={triggerRef}
-        class="dialkit-shortcuts-trigger"
+        class="design-kit-shortcuts-trigger"
         onClick={toggle}
         onPointerDown={() => {
           triggerTapAnim?.stop();
@@ -171,28 +171,28 @@ export function ShortcutsMenu(props: ShortcutsMenuProps) {
             el.style.transform = 'translateY(4px) scale(0.97)';
             el.style.pointerEvents = 'none';
           }}
-          class="dialkit-root dialkit-shortcuts-dropdown"
+          class="design-kit-root design-kit-shortcuts-dropdown"
           style={{
             position: 'fixed',
             top: `${pos().top}px`,
             right: `${pos().right}px`,
           }}
         >
-          <div class="dialkit-shortcuts-title">Keyboard Shortcuts</div>
-          <div class="dialkit-shortcuts-list">
+          <div class="design-kit-shortcuts-title">Keyboard Shortcuts</div>
+          <div class="design-kit-shortcuts-list">
             <For each={rows()}>
               {(row) => (
-                <div class="dialkit-shortcuts-row">
-                  <span class="dialkit-shortcuts-row-key">
+                <div class="design-kit-shortcuts-row">
+                  <span class="design-kit-shortcuts-row-key">
                     {formatShortcutKey(row.shortcut)}
                   </span>
-                  <span class="dialkit-shortcuts-row-label">{row.label}</span>
-                  <span class="dialkit-shortcuts-row-mode">{formatInteraction(row.shortcut)}</span>
+                  <span class="design-kit-shortcuts-row-label">{row.label}</span>
+                  <span class="design-kit-shortcuts-row-mode">{formatInteraction(row.shortcut)}</span>
                 </div>
               )}
             </For>
           </div>
-          <div class="dialkit-shortcuts-hint">See pill badges on controls for keys</div>
+          <div class="design-kit-shortcuts-hint">See pill badges on controls for keys</div>
         </div>
       </Portal>
     </>

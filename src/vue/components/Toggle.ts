@@ -1,10 +1,10 @@
 import { defineComponent, h, type PropType } from 'vue';
 import { SegmentedControl } from './SegmentedControl';
-import type { ShortcutConfig } from '../../store/DialStore';
+import type { ShortcutConfig } from '../../store/DesignKitStore';
 import { formatToggleShortcut } from '../../shortcut-utils';
 
 export const Toggle = defineComponent({
-  name: 'DialKitToggle',
+  name: 'DesignKitToggle',
   props: {
     label: { type: String, required: true },
     checked: { type: Boolean, required: true },
@@ -13,12 +13,12 @@ export const Toggle = defineComponent({
   },
   emits: ['change'],
   setup(props, { emit }) {
-    return () => h('div', { class: 'dialkit-labeled-control' }, [
-      h('span', { class: 'dialkit-labeled-control-label' }, [
+    return () => h('div', { class: 'design-kit-labeled-control' }, [
+      h('span', { class: 'design-kit-labeled-control-label' }, [
         props.label,
         props.shortcut
           ? h('span', {
-              class: `dialkit-shortcut-pill${props.shortcutActive ? ' dialkit-shortcut-pill-active' : ''}`,
+              class: `design-kit-shortcut-pill${props.shortcutActive ? ' design-kit-shortcut-pill-active' : ''}`,
             }, formatToggleShortcut(props.shortcut))
           : null,
       ]),

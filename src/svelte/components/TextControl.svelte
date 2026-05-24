@@ -7,11 +7,11 @@
   }>();
 </script>
 
-<div class="dialkit-text-control">
-  <label class="dialkit-text-label">{label}</label>
+<div class="design-kit-text-control">
+  <label class="design-kit-text-label">{label}</label>
   <input
     type="text"
-    class="dialkit-text-input"
+    class="design-kit-text-input"
     value={value}
     placeholder={placeholder}
     oninput={(e) => onChange((e.currentTarget as HTMLInputElement).value)}

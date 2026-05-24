@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { DialStore } from 'dialkit/store';
-  import type { PanelConfig } from 'dialkit/store';
+  import { DesignKitStore } from 'design-kit/store';
+  import type { PanelConfig } from 'design-kit/store';
   import { themeCSS } from '../theme-css';
   import Portal from '../Portal.svelte';
   import Panel from './Panel.svelte';
   import ShortcutListener from './ShortcutListener.svelte';
 
-  export type DialPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-  export type DialMode = 'popover' | 'inline';
-  export type DialTheme = 'light' | 'dark' | 'system';
+  export type DesignPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+  export type DesignMode = 'popover' | 'inline';
+  export type DesignTheme = 'light' | 'dark' | 'system';
 
   declare const process: { env?: { NODE_ENV?: string } } | undefined;
 
@@ -18,11 +18,11 @@
       ? (import.meta as any).env.MODE !== 'production'
       : true;
 
-  let { position = 'top-right', defaultOpen = true, mode = 'popover', theme = 'system' as DialTheme, productionEnabled = isDevDefault } = $props<{
-    position?: DialPosition;
+  let { position = 'top-right', defaultOpen = true, mode = 'popover', theme = 'system' as DesignTheme, productionEnabled = isDevDefault } = $props<{
+    position?: DesignPosition;
     defaultOpen?: boolean;
-    mode?: DialMode;
-    theme?: DialTheme;
+    mode?: DesignMode;
+    theme?: DesignTheme;
     productionEnabled?: boolean;
   }>();
 
@@ -33,7 +33,7 @@
 
   $effect(() => {
     if (typeof document === 'undefined') return;
-    const id = 'dialkit-theme';
+    const id = 'design-kit-theme';
     if (!document.getElementById(id)) {
       const style = document.createElement('style');
       style.id = id;
@@ -46,10 +46,10 @@
     if (typeof window === 'undefined') return;
 
     mounted = true;
-    panels = DialStore.getPanels();
+    panels = DesignKitStore.getPanels();
 
-    const unsub = DialStore.subscribeGlobal(() => {
-      panels = DialStore.getPanels();
+    const unsub = DesignKitStore.subscribeGlobal(() => {
+      panels = DesignKitStore.getPanels();
     });
 
     return unsub;
@@ -59,8 +59,8 @@
 {#if productionEnabled && mounted && panels.length > 0}
   {#snippet content()}
     <ShortcutListener>
-      <div class="dialkit-root" data-mode={mode} data-theme={theme}>
-        <div class="dialkit-panel" data-mode={mode} data-position={inline ? undefined : position}>
+      <div class="design-kit-root" data-mode={mode} data-theme={theme}>
+        <div class="design-kit-panel" data-mode={mode} data-position={inline ? undefined : position}>
           {#each panels as panel (panel.id)}
             <Panel {panel} defaultOpen={inline || defaultOpen} {inline} />
           {/each}

@@ -37,7 +37,7 @@ export function SelectControl(props: SelectControlProps) {
   const selectedOption = () => normalized().find((o) => o.value === props.value);
 
   onMount(() => {
-    const root = triggerRef?.closest('.dialkit-root') as HTMLElement | null;
+    const root = triggerRef?.closest('.design-kit-root') as HTMLElement | null;
     setPortalTarget(root ?? document.body);
 
     if (chevronRef) {
@@ -135,19 +135,19 @@ export function SelectControl(props: SelectControlProps) {
   };
 
   return (
-    <div class="dialkit-select-row">
+    <div class="design-kit-select-row">
       <button
         ref={triggerRef}
-        class="dialkit-select-trigger"
+        class="design-kit-select-trigger"
         onClick={() => isOpen() ? closeDropdown() : openDropdown()}
         data-open={String(isOpen())}
       >
-        <span class="dialkit-select-label">{props.label}</span>
-        <div class="dialkit-select-right">
-          <span class="dialkit-select-value">{selectedOption()?.label ?? props.value}</span>
+        <span class="design-kit-select-label">{props.label}</span>
+        <div class="design-kit-select-right">
+          <span class="design-kit-select-value">{selectedOption()?.label ?? props.value}</span>
           <svg
             ref={chevronRef}
-            class="dialkit-select-chevron"
+            class="design-kit-select-chevron"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -173,13 +173,13 @@ export function SelectControl(props: SelectControlProps) {
                   { type: 'spring', visualDuration: 0.15, bounce: 0 }
                 );
               }}
-              class="dialkit-select-dropdown"
+              class="design-kit-select-dropdown"
               style={dropdownStyle()}
             >
               <For each={normalized()}>
                 {(option) => (
                   <button
-                    class="dialkit-select-option"
+                    class="design-kit-select-option"
                     data-selected={String(option.value === props.value)}
                     onClick={() => {
                       props.onChange(option.value);

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { DialStore, Preset } from '../store/DialStore';
+import { DesignKitStore, Preset } from '../store/DesignKitStore';
 import { ICON_CHEVRON, ICON_TRASH } from '../icons';
 
 interface PresetManagerProps {
@@ -55,33 +55,33 @@ export function PresetManager({ panelId, presets, activePresetId, onAdd }: Prese
 
   const handleSelect = (presetId: string | null) => {
     if (presetId) {
-      DialStore.loadPreset(panelId, presetId);
+      DesignKitStore.loadPreset(panelId, presetId);
     } else {
-      DialStore.clearActivePreset(panelId);
+      DesignKitStore.clearActivePreset(panelId);
     }
     close();
   };
 
   const handleDelete = (e: React.MouseEvent, presetId: string) => {
     e.stopPropagation();
-    DialStore.deletePreset(panelId, presetId);
+    DesignKitStore.deletePreset(panelId, presetId);
   };
 
   return (
-    <div className="dialkit-preset-manager">
+    <div className="design-kit-preset-manager">
       <button
         ref={triggerRef}
-        className="dialkit-preset-trigger"
+        className="design-kit-preset-trigger"
         onClick={toggle}
         data-open={String(isOpen)}
         data-has-preset={String(!!activePreset)}
         data-disabled={String(!hasPresets)}
       >
-        <span className="dialkit-preset-label">
+        <span className="design-kit-preset-label">
           {activePreset ? activePreset.name : 'Version 1'}
         </span>
         <motion.svg
-          className="dialkit-select-chevron"
+          className="design-kit-select-chevron"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -100,7 +100,7 @@ export function PresetManager({ panelId, presets, activePresetId, onAdd }: Prese
           {isOpen && (
             <motion.div
               ref={dropdownRef}
-              className="dialkit-root dialkit-preset-dropdown"
+              className="design-kit-root design-kit-preset-dropdown"
               style={{ position: 'fixed', top: pos.top, left: pos.left, minWidth: pos.width }}
               initial={{ opacity: 0, y: 4, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -108,23 +108,23 @@ export function PresetManager({ panelId, presets, activePresetId, onAdd }: Prese
               transition={{ type: 'spring', visualDuration: 0.15, bounce: 0 }}
             >
               <div
-                className="dialkit-preset-item"
+                className="design-kit-preset-item"
                 data-active={String(!activePresetId)}
                 onClick={() => handleSelect(null)}
               >
-                <span className="dialkit-preset-name">Version 1</span>
+                <span className="design-kit-preset-name">Version 1</span>
               </div>
 
               {presets.map((preset) => (
                 <div
                   key={preset.id}
-                  className="dialkit-preset-item"
+                  className="design-kit-preset-item"
                   data-active={String(preset.id === activePresetId)}
                   onClick={() => handleSelect(preset.id)}
                 >
-                  <span className="dialkit-preset-name">{preset.name}</span>
+                  <span className="design-kit-preset-name">{preset.name}</span>
                   <button
-                    className="dialkit-preset-delete"
+                    className="design-kit-preset-delete"
                     onClick={(e) => handleDelete(e, preset.id)}
                     title="Delete preset"
                   >

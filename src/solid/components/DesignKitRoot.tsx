@@ -1,13 +1,13 @@
 import { createSignal, onMount, onCleanup, Show, For } from 'solid-js';
 import { Portal } from 'solid-js/web';
-import { DialStore } from '../../store/DialStore';
-import type { PanelConfig } from '../../store/DialStore';
+import { DesignKitStore } from '../../store/DesignKitStore';
+import type { PanelConfig } from '../../store/DesignKitStore';
 import { ShortcutListener } from './ShortcutListener';
 import { Panel } from './Panel';
 
-export type DialPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-export type DialMode = 'popover' | 'inline';
-export type DialTheme = 'light' | 'dark' | 'system';
+export type DesignPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+export type DesignMode = 'popover' | 'inline';
+export type DesignTheme = 'light' | 'dark' | 'system';
 
 declare const process: { env?: { NODE_ENV?: string } } | undefined;
 
@@ -17,15 +17,15 @@ const isDevDefault = typeof process !== 'undefined' && process?.env?.NODE_ENV
     ? (import.meta as any).env.MODE !== 'production'
     : true;
 
-interface DialRootProps {
-  position?: DialPosition;
+interface DesignKitRootProps {
+  position?: DesignPosition;
   defaultOpen?: boolean;
-  mode?: DialMode;
-  theme?: DialTheme;
+  mode?: DesignMode;
+  theme?: DesignTheme;
   productionEnabled?: boolean;
 }
 
-export function DialRoot(props: DialRootProps) {
+export function DesignKitRoot(props: DesignKitRootProps) {
   if ((props.productionEnabled ?? isDevDefault) === false) return null;
   const [panels, setPanels] = createSignal<PanelConfig[]>([]);
   const [mounted, setMounted] = createSignal(false);
@@ -33,17 +33,17 @@ export function DialRoot(props: DialRootProps) {
 
   onMount(() => {
     setMounted(true);
-    setPanels(DialStore.getPanels());
-    const unsub = DialStore.subscribeGlobal(() => {
-      setPanels(DialStore.getPanels());
+    setPanels(DesignKitStore.getPanels());
+    const unsub = DesignKitStore.subscribeGlobal(() => {
+      setPanels(DesignKitStore.getPanels());
     });
     onCleanup(unsub);
   });
 
   const content = () => (
     <ShortcutListener>
-      <div class="dialkit-root" data-mode={props.mode ?? 'popover'} data-theme={props.theme ?? 'system'}>
-        <div class="dialkit-panel" data-position={inline() ? undefined : (props.position ?? 'top-right')} data-mode={props.mode ?? 'popover'}>
+      <div class="design-kit-root" data-mode={props.mode ?? 'popover'} data-theme={props.theme ?? 'system'}>
+        <div class="design-kit-panel" data-position={inline() ? undefined : (props.position ?? 'top-right')} data-mode={props.mode ?? 'popover'}>
           <For each={panels()}>
             {(panel) => <Panel panel={panel} defaultOpen={inline() || (props.defaultOpen ?? true)} inline={inline()} />}
           </For>

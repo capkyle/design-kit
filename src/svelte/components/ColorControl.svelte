@@ -42,13 +42,13 @@
   };
 </script>
 
-<div class="dialkit-color-control">
-  <label class="dialkit-color-label">{label}</label>
-  <div class="dialkit-color-inputs">
+<div class="design-kit-color-control">
+  <label class="design-kit-color-label">{label}</label>
+  <div class="design-kit-color-inputs">
     {#if isEditing}
       <input
         type="text"
-        class="dialkit-color-hex-input"
+        class="design-kit-color-hex-input"
         value={editValue}
         oninput={(e) => (editValue = (e.currentTarget as HTMLInputElement).value)}
         onblur={handleTextSubmit}
@@ -56,13 +56,13 @@
         autofocus
       />
     {:else}
-      <span class="dialkit-color-hex" onclick={() => (isEditing = true)}>
+      <span class="design-kit-color-hex" onclick={() => (isEditing = true)}>
         {(value ?? '').toUpperCase()}
       </span>
     {/if}
 
     <button
-      class="dialkit-color-swatch"
+      class="design-kit-color-swatch"
       style:background-color={value}
       onclick={() => colorInputRef?.click()}
       title="Pick color"
@@ -72,7 +72,7 @@
     <input
       bind:this={colorInputRef}
       type="color"
-      class="dialkit-color-picker-native"
+      class="design-kit-color-picker-native"
       aria-label={`${label} color picker`}
       value={value.length === 4 ? expandShorthandHex(value) : value.slice(0, 7)}
       oninput={(e) => onChange((e.currentTarget as HTMLInputElement).value)}

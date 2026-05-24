@@ -1,6 +1,6 @@
 import { createSignal, onMount, onCleanup } from 'solid-js';
-import { DialStore } from '../../store/DialStore';
-import type { SpringConfig } from '../../store/DialStore';
+import { DesignKitStore } from '../../store/DesignKitStore';
+import type { SpringConfig } from '../../store/DesignKitStore';
 import { Folder } from './Folder';
 import { Slider } from './Slider';
 import { SegmentedControl } from './SegmentedControl';
@@ -16,13 +16,13 @@ interface SpringControlProps {
 
 export function SpringControl(props: SpringControlProps) {
   const [mode, setMode] = createSignal<'simple' | 'advanced'>(
-    DialStore.getSpringMode(props.panelId, props.path)
+    DesignKitStore.getSpringMode(props.panelId, props.path)
   );
 
   // Subscribe to store changes for mode
   onMount(() => {
-    const unsub = DialStore.subscribe(props.panelId, () => {
-      setMode(DialStore.getSpringMode(props.panelId, props.path));
+    const unsub = DesignKitStore.subscribe(props.panelId, () => {
+      setMode(DesignKitStore.getSpringMode(props.panelId, props.path));
     });
     onCleanup(unsub);
   });
@@ -45,7 +45,7 @@ export function SpringControl(props: SpringControlProps) {
       cache.advanced = props.spring;
     }
 
-    DialStore.updateSpringMode(props.panelId, props.path, newMode);
+    DesignKitStore.updateSpringMode(props.panelId, props.path, newMode);
 
     if (newMode === 'simple') {
       props.onChange(cache.simple);
@@ -69,8 +69,8 @@ export function SpringControl(props: SpringControlProps) {
       <div style={{ display: 'flex', 'flex-direction': 'column', gap: '6px' }}>
         <SpringVisualization spring={props.spring} isSimpleMode={isSimpleMode()} />
 
-        <div class="dialkit-labeled-control">
-          <span class="dialkit-labeled-control-label">Type</span>
+        <div class="design-kit-labeled-control">
+          <span class="design-kit-labeled-control-label">Type</span>
           <SegmentedControl
             options={[
               { value: 'simple' as const, label: 'Time' },

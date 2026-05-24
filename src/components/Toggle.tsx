@@ -1,5 +1,5 @@
 import { SegmentedControl } from './SegmentedControl';
-import type { ShortcutConfig } from '../store/DialStore';
+import type { ShortcutConfig } from '../store/DesignKitStore';
 import { formatToggleShortcut } from '../shortcut-utils';
 
 interface ToggleProps {
@@ -12,11 +12,11 @@ interface ToggleProps {
 
 export function Toggle({ label, checked, onChange, shortcut, shortcutActive }: ToggleProps) {
   return (
-    <div className="dialkit-labeled-control">
-      <span className="dialkit-labeled-control-label">
+    <div className="design-kit-labeled-control">
+      <span className="design-kit-labeled-control-label">
         {label}
         {shortcut && (
-          <span className={`dialkit-shortcut-pill${shortcutActive ? ' dialkit-shortcut-pill-active' : ''}`}>
+          <span className={`design-kit-shortcut-pill${shortcutActive ? ' design-kit-shortcut-pill-active' : ''}`}>
             {formatToggleShortcut(shortcut)}
           </span>
         )}

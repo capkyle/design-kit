@@ -10,14 +10,14 @@ function expandShorthandHex(hex: string): string {
 let colorControlInstance = 0;
 
 export const ColorControl = defineComponent({
-  name: 'DialKitColorControl',
+  name: 'DesignKitColorControl',
   props: {
     label: { type: String, required: true },
     value: { type: String, required: true },
   },
   emits: ['change'],
   setup(props, { emit }) {
-    const textInputId = ref(`dialkit-color-${++colorControlInstance}`);
+    const textInputId = ref(`design-kit-color-${++colorControlInstance}`);
     const isEditing = ref(false);
     const editValue = ref(props.value);
     const colorInputRef = ref<HTMLInputElement | null>(null);
@@ -35,14 +35,14 @@ export const ColorControl = defineComponent({
       }
     };
 
-    return () => h('div', { class: 'dialkit-color-control' }, [
-      h('label', { class: 'dialkit-color-label', for: textInputId.value }, props.label),
-      h('div', { class: 'dialkit-color-inputs' }, [
+    return () => h('div', { class: 'design-kit-color-control' }, [
+      h('label', { class: 'design-kit-color-label', for: textInputId.value }, props.label),
+      h('div', { class: 'design-kit-color-inputs' }, [
         isEditing.value
           ? h('input', {
             id: textInputId.value,
             type: 'text',
-            class: 'dialkit-color-hex-input',
+            class: 'design-kit-color-hex-input',
             value: editValue.value,
             autofocus: true,
             onInput: (event: Event) => {
@@ -57,9 +57,9 @@ export const ColorControl = defineComponent({
               }
             },
           })
-          : h('span', { class: 'dialkit-color-hex', onClick: () => { isEditing.value = true; } }, (props.value ?? '').toUpperCase()),
+          : h('span', { class: 'design-kit-color-hex', onClick: () => { isEditing.value = true; } }, (props.value ?? '').toUpperCase()),
         h('button', {
-          class: 'dialkit-color-swatch',
+          class: 'design-kit-color-swatch',
           style: { backgroundColor: props.value },
           title: 'Pick color',
           'aria-label': `Pick color for ${props.label}`,
@@ -68,7 +68,7 @@ export const ColorControl = defineComponent({
         h('input', {
           ref: colorInputRef,
           type: 'color',
-          class: 'dialkit-color-picker-native',
+          class: 'design-kit-color-picker-native',
           'aria-label': `${props.label} color picker`,
           value: props.value.length === 4 ? expandShorthandHex(props.value) : props.value.slice(0, 7),
           onInput: (event: Event) => emit('change', (event.target as HTMLInputElement).value),

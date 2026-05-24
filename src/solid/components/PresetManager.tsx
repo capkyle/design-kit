@@ -2,8 +2,8 @@ import { createSignal, createEffect, onMount, onCleanup, Show, For } from 'solid
 import { Portal } from 'solid-js/web';
 import { animate } from 'motion';
 import { ICON_CHEVRON, ICON_TRASH } from '../../icons';
-import { DialStore } from '../../store/DialStore';
-import type { Preset } from '../../store/DialStore';
+import { DesignKitStore } from '../../store/DesignKitStore';
+import type { Preset } from '../../store/DesignKitStore';
 
 interface PresetManagerProps {
   panelId: string;
@@ -27,7 +27,7 @@ export function PresetManager(props: PresetManagerProps) {
   const activePreset = () => props.presets.find((p) => p.id === props.activePresetId);
 
   onMount(() => {
-    const root = triggerRef?.closest('.dialkit-root') as HTMLElement | null;
+    const root = triggerRef?.closest('.design-kit-root') as HTMLElement | null;
     setPortalTarget(root ?? document.body);
 
     if (chevronRef) {
@@ -102,32 +102,32 @@ export function PresetManager(props: PresetManagerProps) {
   });
 
   const handleSelect = (presetId: string | null) => {
-    if (presetId) DialStore.loadPreset(props.panelId, presetId);
-    else DialStore.clearActivePreset(props.panelId);
+    if (presetId) DesignKitStore.loadPreset(props.panelId, presetId);
+    else DesignKitStore.clearActivePreset(props.panelId);
     closeDropdown();
   };
 
   const handleDelete = (e: MouseEvent, presetId: string) => {
     e.stopPropagation();
-    DialStore.deletePreset(props.panelId, presetId);
+    DesignKitStore.deletePreset(props.panelId, presetId);
   };
 
   return (
-    <div class="dialkit-preset-manager">
+    <div class="design-kit-preset-manager">
       <button
         ref={triggerRef}
-        class="dialkit-preset-trigger"
+        class="design-kit-preset-trigger"
         onClick={toggle}
         data-open={String(isOpen())}
         data-has-preset={String(!!activePreset())}
         data-disabled={String(!hasPresets())}
       >
-        <span class="dialkit-preset-label">
+        <span class="design-kit-preset-label">
           {activePreset() ? activePreset()!.name : 'Version 1'}
         </span>
         <svg
           ref={chevronRef}
-          class="dialkit-select-chevron"
+          class="design-kit-select-chevron"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -151,7 +151,7 @@ export function PresetManager(props: PresetManagerProps) {
                   { type: 'spring', visualDuration: 0.15, bounce: 0 }
                 );
               }}
-              class="dialkit-root dialkit-preset-dropdown"
+              class="design-kit-root design-kit-preset-dropdown"
               style={{
                 position: 'fixed',
                 top: `${pos().top}px`,
@@ -160,23 +160,23 @@ export function PresetManager(props: PresetManagerProps) {
               }}
             >
               <div
-                class="dialkit-preset-item"
+                class="design-kit-preset-item"
                 data-active={String(!props.activePresetId)}
                 onClick={() => handleSelect(null)}
               >
-                <span class="dialkit-preset-name">Version 1</span>
+                <span class="design-kit-preset-name">Version 1</span>
               </div>
 
               <For each={props.presets}>
                 {(preset) => (
                   <div
-                    class="dialkit-preset-item"
+                    class="design-kit-preset-item"
                     data-active={String(preset.id === props.activePresetId)}
                     onClick={() => handleSelect(preset.id)}
                   >
-                    <span class="dialkit-preset-name">{preset.name}</span>
+                    <span class="design-kit-preset-name">{preset.name}</span>
                     <button
-                      class="dialkit-preset-delete"
+                      class="design-kit-preset-delete"
                       onClick={(e) => handleDelete(e, preset.id)}
                       title="Delete preset"
                     >

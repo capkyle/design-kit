@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Spring } from 'svelte/motion';
-  import { DialStore } from 'dialkit/store';
-  import type { DialValue, PanelConfig, Preset } from 'dialkit/store';
+  import { DesignKitStore } from 'design-kit/store';
+  import type { DesignValue, PanelConfig, Preset } from 'design-kit/store';
   import Folder from './Folder.svelte';
   import PresetManager from './PresetManager.svelte';
   import ControlRenderer from './ControlRenderer.svelte';
@@ -14,9 +14,9 @@
 
   let copied = $state(false);
   let isPanelOpen = $state(defaultOpen);
-  let values = $state<Record<string, DialValue>>(DialStore.getValues(panel.id));
-  let presets = $state<Preset[]>(DialStore.getPresets(panel.id));
-  let activePresetId = $state<string | null>(DialStore.getActivePresetId(panel.id));
+  let values = $state<Record<string, DesignValue>>(DesignKitStore.getValues(panel.id));
+  let presets = $state<Preset[]>(DesignKitStore.getPresets(panel.id));
+  let activePresetId = $state<string | null>(DesignKitStore.getActivePresetId(panel.id));
 
   const addScale = new Spring(1, { stiffness: 0.25, damping: 0.7 });
   const copyScale = new Spring(1, { stiffness: 0.25, damping: 0.7 });
@@ -28,10 +28,10 @@
   let copyTimeout: ReturnType<typeof setTimeout> | undefined;
 
   $effect(() => {
-    const unsub = DialStore.subscribe(panel.id, () => {
-      values = DialStore.getValues(panel.id);
-      presets = DialStore.getPresets(panel.id);
-      activePresetId = DialStore.getActivePresetId(panel.id);
+    const unsub = DesignKitStore.subscribe(panel.id, () => {
+      values = DesignKitStore.getValues(panel.id);
+      presets = DesignKitStore.getPresets(panel.id);
+      activePresetId = DesignKitStore.getActivePresetId(panel.id);
     });
 
     return () => {
@@ -57,12 +57,12 @@
 
   const handleAddPreset = () => {
     const nextNum = presets.length + 2;
-    DialStore.savePreset(panel.id, `Version ${nextNum}`);
+    DesignKitStore.savePreset(panel.id, `Version ${nextNum}`);
   };
 
   const handleCopy = async () => {
     const jsonStr = JSON.stringify(values, null, 2);
-    const instruction = `Update the createDialKit configuration for "${panel.name}" with these values:\n\n\`\`\`json\n${jsonStr}\n\`\`\`\n\nApply these values as the new defaults in the createDialKit call.`;
+    const instruction = `Update the createDesignKit configuration for "${panel.name}" with these values:\n\n\`\`\`json\n${jsonStr}\n\`\`\`\n\nApply these values as the new defaults in the createDesignKit call.`;
 
     await navigator.clipboard.writeText(instruction);
     copied = true;
@@ -74,11 +74,11 @@
   };
 </script>
 
-<div class="dialkit-panel-wrapper">
+<div class="design-kit-panel-wrapper">
   <Folder title={panel.name} {defaultOpen} isRoot={true} {inline} onOpenChange={(open) => (isPanelOpen = open)}>
     {#snippet toolbar()}
       <button
-        class="dialkit-toolbar-add"
+        class="design-kit-toolbar-add"
         onclick={handleAddPreset}
         onpointerdown={() => addScale.set(0.9)}
         onpointerup={() => addScale.set(1)}
@@ -99,7 +99,7 @@
       <PresetManager panelId={panel.id} {presets} {activePresetId} />
 
       <button
-        class="dialkit-toolbar-copy"
+        class="design-kit-toolbar-copy"
         onclick={handleCopy}
         onpointerdown={() => copyScale.set(0.95)}
         onpointerup={() => copyScale.set(1)}
@@ -108,9 +108,9 @@
         title="Copy parameters"
         style:transform={`scale(${copyScale.current})`}
       >
-        <span class="dialkit-toolbar-copy-icon-wrap">
+        <span class="design-kit-toolbar-copy-icon-wrap">
           <svg
-            class="dialkit-toolbar-copy-icon"
+            class="design-kit-toolbar-copy-icon"
             viewBox="0 0 24 24"
             fill="none"
             style:opacity={clipboardOpacity.current}
@@ -123,7 +123,7 @@
           </svg>
 
           <svg
-            class="dialkit-toolbar-copy-icon"
+            class="design-kit-toolbar-copy-icon"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

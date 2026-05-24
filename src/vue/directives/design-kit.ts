@@ -7,25 +7,25 @@ import {
   type ObjectDirective,
   type ShallowRef,
 } from 'vue';
-import { DialRoot, type DialMode, type DialPosition } from '../components/DialRoot';
+import { DesignKitRoot, type DesignMode, type DesignPosition } from '../components/DesignKitRoot';
 
-export interface DialKitDirectiveOptions {
-  position?: DialPosition;
+export interface DesignKitDirectiveOptions {
+  position?: DesignPosition;
   defaultOpen?: boolean;
-  mode?: DialMode;
+  mode?: DesignMode;
 }
 
-export type DialKitDirectiveValue = DialMode | DialKitDirectiveOptions | undefined;
+export type DesignKitDirectiveValue = DesignMode | DesignKitDirectiveOptions | undefined;
 
 type DirectiveState = {
   app: App;
   host: HTMLDivElement;
-  props: ShallowRef<DialKitDirectiveOptions>;
+  props: ShallowRef<DesignKitDirectiveOptions>;
 };
 
 const states = new WeakMap<HTMLElement, DirectiveState>();
 
-function normalizeDirectiveValue(value: DialKitDirectiveValue): DialKitDirectiveOptions {
+function normalizeDirectiveValue(value: DesignKitDirectiveValue): DesignKitDirectiveOptions {
   if (!value) return {};
   if (value === 'inline' || value === 'popover') {
     return { mode: value };
@@ -33,17 +33,17 @@ function normalizeDirectiveValue(value: DialKitDirectiveValue): DialKitDirective
   return value;
 }
 
-function mountDialRoot(el: HTMLElement, value: DialKitDirectiveValue) {
+function mountDesignKitRoot(el: HTMLElement, value: DesignKitDirectiveValue) {
   if (typeof window === 'undefined') return;
 
   const host = document.createElement('div');
   el.appendChild(host);
 
-  const props = shallowRef<DialKitDirectiveOptions>(normalizeDirectiveValue(value));
+  const props = shallowRef<DesignKitDirectiveOptions>(normalizeDirectiveValue(value));
   const RootHost = defineComponent({
-    name: 'DialKitDirectiveHost',
+    name: 'DesignKitDirectiveHost',
     setup() {
-      return () => h(DialRoot, props.value);
+      return () => h(DesignKitRoot, props.value);
     },
   });
 
@@ -53,7 +53,7 @@ function mountDialRoot(el: HTMLElement, value: DialKitDirectiveValue) {
   states.set(el, { app, host, props });
 }
 
-function unmountDialRoot(el: HTMLElement) {
+function unmountDesignKitRoot(el: HTMLElement) {
   const state = states.get(el);
   if (!state) return;
 
@@ -62,19 +62,19 @@ function unmountDialRoot(el: HTMLElement) {
   states.delete(el);
 }
 
-export const vDialKit: ObjectDirective<HTMLElement, DialKitDirectiveValue> = {
+export const vDesignKit: ObjectDirective<HTMLElement, DesignKitDirectiveValue> = {
   mounted(el, binding) {
-    mountDialRoot(el, binding.value);
+    mountDesignKitRoot(el, binding.value);
   },
   updated(el, binding) {
     const state = states.get(el);
     if (!state) {
-      mountDialRoot(el, binding.value);
+      mountDesignKitRoot(el, binding.value);
       return;
     }
     state.props.value = normalizeDirectiveValue(binding.value);
   },
   beforeUnmount(el) {
-    unmountDialRoot(el);
+    unmountDesignKitRoot(el);
   },
 };

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  export const SHORTCUT_CTX = Symbol('dialkit-shortcut');
+  export const SHORTCUT_CTX = Symbol('design-kit-shortcut');
 
   export interface ShortcutContextValue {
     activePanelId: string | null;
@@ -9,7 +9,7 @@
 
 <script lang="ts">
   import { setContext } from 'svelte';
-  import { DialStore } from 'dialkit/store';
+  import { DesignKitStore } from 'design-kit/store';
   import type { Snippet } from 'svelte';
   import {
     getEffectiveStep,
@@ -41,13 +41,13 @@
 
   function resolveActiveTarget(interaction: string) {
     for (const key of activeKeys) {
-      const panels = DialStore.getPanels();
+      const panels = DesignKitStore.getPanels();
       for (const panel of panels) {
         for (const [path, shortcut] of Object.entries(panel.shortcuts)) {
           if (!shortcut.key) continue;
           if (shortcut.key.toLowerCase() !== key) continue;
           if ((shortcut.interaction ?? 'scroll') !== interaction) continue;
-          const control = DialStore.getPanel(panel.id)?.controls
+          const control = DesignKitStore.getPanel(panel.id)?.controls
             ? findControl(panel.controls, path)
             : null;
           if (control && control.type === 'slider') {
@@ -84,15 +84,15 @@
     activeKeys.add(key);
 
     const modifier = getActiveModifier(e);
-    const target = DialStore.resolveShortcutTarget(key, modifier);
+    const target = DesignKitStore.resolveShortcutTarget(key, modifier);
     if (target) {
       activePanelId = target.panelId;
       activePath = target.path;
 
       // Toggle: flip on first keydown only (not on key repeat)
       if (!wasAlreadyHeld && target.control.type === 'toggle') {
-        const currentValue = DialStore.getValue(target.panelId, target.path) as boolean;
-        DialStore.updateValue(target.panelId, target.path, !currentValue);
+        const currentValue = DesignKitStore.getValue(target.panelId, target.path) as boolean;
+        DesignKitStore.updateValue(target.panelId, target.path, !currentValue);
       }
     }
 
@@ -119,7 +119,7 @@
       let found = false;
       for (const remainingKey of activeKeys) {
         const modifier = getActiveModifier(e);
-        const target = DialStore.resolveShortcutTarget(remainingKey, modifier);
+        const target = DesignKitStore.resolveShortcutTarget(remainingKey, modifier);
         if (target) {
           activePanelId = target.panelId;
           activePath = target.path;
@@ -142,7 +142,7 @@
     // Key+scroll shortcuts
     if (activeKeys.size > 0) {
       for (const key of activeKeys) {
-        const target = DialStore.resolveShortcutTarget(key, modifier);
+        const target = DesignKitStore.resolveShortcutTarget(key, modifier);
         if (!target) continue;
 
         const { panelId, path, control } = target;
@@ -158,7 +158,7 @@
     }
 
     // Scroll-only shortcuts (no key needed)
-    const scrollOnlyTargets = DialStore.resolveScrollOnlyTargets();
+    const scrollOnlyTargets = DesignKitStore.resolveScrollOnlyTargets();
     for (const { panelId, path, control, shortcut } of scrollOnlyTargets) {
       if (control.type !== 'slider') continue;
 

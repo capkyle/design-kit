@@ -1,7 +1,7 @@
 // Shared shortcut utilities — single source of truth across all framework adapters.
 
-import { DialStore } from './store/DialStore';
-import type { ControlMeta, ShortcutConfig } from './store/DialStore';
+import { DesignKitStore } from './store/DesignKitStore';
+import type { ControlMeta, ShortcutConfig } from './store/DesignKitStore';
 
 // ── Math helpers ──
 
@@ -33,11 +33,11 @@ export function applySliderDelta(
   effectiveStep: number,
   direction: number
 ): void {
-  const currentValue = DialStore.getValue(panelId, path) as number;
+  const currentValue = DesignKitStore.getValue(panelId, path) as number;
   const min = control.min ?? 0;
   const max = control.max ?? 1;
   const newValue = Math.max(min, Math.min(max, currentValue + direction * effectiveStep));
-  DialStore.updateValue(panelId, path, roundValue(newValue, effectiveStep));
+  DesignKitStore.updateValue(panelId, path, roundValue(newValue, effectiveStep));
 }
 
 export function snapToDecile(rawValue: number, min: number, max: number): number {

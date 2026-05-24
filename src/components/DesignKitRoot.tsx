@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { DialStore, PanelConfig } from '../store/DialStore';
+import { DesignKitStore, PanelConfig } from '../store/DesignKitStore';
 import { Panel } from './Panel';
 import { ShortcutListener } from './ShortcutListener';
 
-export type DialPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-export type DialMode = 'popover' | 'inline';
-export type DialTheme = 'light' | 'dark' | 'system';
+export type DesignPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+export type DesignMode = 'popover' | 'inline';
+export type DesignTheme = 'light' | 'dark' | 'system';
 
 declare const process: { env?: { NODE_ENV?: string } } | undefined;
 
@@ -16,15 +16,15 @@ const isDevDefault = typeof process !== 'undefined' && process?.env?.NODE_ENV
     ? (import.meta as any).env.MODE !== 'production'
     : true;
 
-interface DialRootProps {
-  position?: DialPosition;
+interface DesignKitRootProps {
+  position?: DesignPosition;
   defaultOpen?: boolean;
-  mode?: DialMode;
-  theme?: DialTheme;
+  mode?: DesignMode;
+  theme?: DesignTheme;
   productionEnabled?: boolean;
 }
 
-export function DialRoot({ position = 'top-right', defaultOpen = true, mode = 'popover', theme = 'system', productionEnabled = isDevDefault }: DialRootProps) {
+export function DesignKitRoot({ position = 'top-right', defaultOpen = true, mode = 'popover', theme = 'system', productionEnabled = isDevDefault }: DesignKitRootProps) {
   if (!productionEnabled) return null;
   const [panels, setPanels] = useState<PanelConfig[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -42,10 +42,10 @@ export function DialRoot({ position = 'top-right', defaultOpen = true, mode = 'p
   // Subscribe to global panel changes
   useEffect(() => {
     setMounted(true);
-    setPanels(DialStore.getPanels());
+    setPanels(DesignKitStore.getPanels());
 
-    const unsubscribe = DialStore.subscribeGlobal(() => {
-      setPanels(DialStore.getPanels());
+    const unsubscribe = DesignKitStore.subscribeGlobal(() => {
+      setPanels(DesignKitStore.getPanels());
     });
 
     return unsubscribe;
@@ -55,7 +55,7 @@ export function DialRoot({ position = 'top-right', defaultOpen = true, mode = 'p
   useEffect(() => {
     if (!panelRef.current || inline) return;
     const observer = new MutationObserver(() => {
-      const inner = panelRef.current?.querySelector('.dialkit-panel-inner');
+      const inner = panelRef.current?.querySelector('.design-kit-panel-inner');
       if (!inner) return;
       const collapsed = inner.getAttribute('data-collapsed') === 'true';
 
@@ -81,7 +81,7 @@ export function DialRoot({ position = 'top-right', defaultOpen = true, mode = 'p
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     // Only drag the collapsed bubble
-    const inner = panelRef.current?.querySelector('.dialkit-panel-inner');
+    const inner = panelRef.current?.querySelector('.design-kit-panel-inner');
     if (!inner || inner.getAttribute('data-collapsed') !== 'true') return;
 
     const rect = panelRef.current!.getBoundingClientRect();
@@ -119,7 +119,7 @@ export function DialRoot({ position = 'top-right', defaultOpen = true, mode = 'p
     // If we actually dragged, prevent the click from opening the panel
     if (didDragRef.current) {
       e.stopPropagation();
-      const inner = panelRef.current?.querySelector('.dialkit-panel-inner');
+      const inner = panelRef.current?.querySelector('.design-kit-panel-inner');
       if (inner) {
         const blocker = (ev: Event) => { ev.stopPropagation(); };
         inner.addEventListener('click', blocker, { capture: true, once: true });
@@ -146,10 +146,10 @@ export function DialRoot({ position = 'top-right', defaultOpen = true, mode = 'p
 
   const content = (
   <ShortcutListener>
-    <div className="dialkit-root" data-mode={mode} data-theme={theme}>
+    <div className="design-kit-root" data-mode={mode} data-theme={theme}>
       <div
         ref={panelRef}
-        className="dialkit-panel"
+        className="design-kit-panel"
         data-position={inline ? undefined : (dragOffset ? undefined : activePosition)}
         data-mode={mode}
         style={dragStyle}

@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'motion/react';
-import type { ShortcutConfig } from '../store/DialStore';
+import type { ShortcutConfig } from '../store/DesignKitStore';
 import { decimalsForStep, roundValue, snapToDecile, formatSliderShortcut } from '../shortcut-utils';
 
 interface SliderProps {
@@ -335,7 +335,7 @@ export function Slider({
         return (
           <div
             key={i}
-            className="dialkit-slider-hashmark"
+            className="design-kit-slider-hashmark"
             style={{ left: `${pct}%` }}
           />
         );
@@ -345,17 +345,17 @@ export function Slider({
         return (
           <div
             key={i}
-            className="dialkit-slider-hashmark"
+            className="design-kit-slider-hashmark"
             style={{ left: `${pct}%` }}
           />
         );
       });
 
   return (
-    <div ref={wrapperRef} className="dialkit-slider-wrapper">
+    <div ref={wrapperRef} className="design-kit-slider-wrapper">
       <motion.div
         ref={trackRef}
-        className={`dialkit-slider ${isActive ? 'dialkit-slider-active' : ''}`}
+        className={`design-kit-slider ${isActive ? 'design-kit-slider-active' : ''}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -363,17 +363,17 @@ export function Slider({
         onMouseLeave={() => setIsHovered(false)}
         style={{ width: rubberBandWidth, x: rubberBandX }}
       >
-        <div className="dialkit-slider-hashmarks">{hashMarks}</div>
+        <div className="design-kit-slider-hashmarks">{hashMarks}</div>
 
         <motion.div
-          className="dialkit-slider-fill"
+          className="design-kit-slider-fill"
           style={{
             width: fillWidth,
           }}
         />
 
         <motion.div
-          className="dialkit-slider-handle"
+          className="design-kit-slider-handle"
           style={{
             left: handleLeft,
             y: '-50%',
@@ -390,10 +390,10 @@ export function Slider({
           }}
         />
 
-        <span ref={labelRef} className="dialkit-slider-label">
+        <span ref={labelRef} className="design-kit-slider-label">
           {label}
           {shortcut && (
-            <span className={`dialkit-shortcut-pill${shortcutActive ? ' dialkit-shortcut-pill-active' : ''}`}>
+            <span className={`design-kit-shortcut-pill${shortcutActive ? ' design-kit-shortcut-pill-active' : ''}`}>
               {formatSliderShortcut(shortcut)}
             </span>
           )}
@@ -403,7 +403,7 @@ export function Slider({
           <input
             ref={inputRef}
             type="text"
-            className="dialkit-slider-input"
+            className="design-kit-slider-input"
             value={inputValue}
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
@@ -414,7 +414,7 @@ export function Slider({
         ) : (
           <span
             ref={valueSpanRef}
-            className={`dialkit-slider-value ${isValueEditable ? 'dialkit-slider-value-editable' : ''}`}
+            className={`design-kit-slider-value ${isValueEditable ? 'design-kit-slider-value-editable' : ''}`}
             onMouseEnter={() => setIsValueHovered(true)}
             onMouseLeave={() => setIsValueHovered(false)}
             onClick={handleValueClick}

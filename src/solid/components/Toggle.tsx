@@ -1,6 +1,6 @@
 import { Show } from 'solid-js';
 import { SegmentedControl } from './SegmentedControl';
-import type { ShortcutConfig } from '../../store/DialStore';
+import type { ShortcutConfig } from '../../store/DesignKitStore';
 import { formatToggleShortcut } from '../../shortcut-utils';
 
 interface ToggleProps {
@@ -13,11 +13,11 @@ interface ToggleProps {
 
 export function Toggle(props: ToggleProps) {
   return (
-    <div class="dialkit-labeled-control">
-      <span class="dialkit-labeled-control-label">
+    <div class="design-kit-labeled-control">
+      <span class="design-kit-labeled-control-label">
         {props.label}
         <Show when={props.shortcut}>
-          <span class={`dialkit-shortcut-pill${props.shortcutActive ? ' dialkit-shortcut-pill-active' : ''}`}>
+          <span class={`design-kit-shortcut-pill${props.shortcutActive ? ' design-kit-shortcut-pill-active' : ''}`}>
             {formatToggleShortcut(props.shortcut!)}
           </span>
         </Show>

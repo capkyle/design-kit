@@ -39,13 +39,13 @@ export function ColorControl({ label, value, onChange }: ColorControlProps) {
   }
 
   return (
-    <div className="dialkit-color-control">
-      <span className="dialkit-color-label">{label}</span>
-      <div className="dialkit-color-inputs">
+    <div className="design-kit-color-control">
+      <span className="design-kit-color-label">{label}</span>
+      <div className="design-kit-color-inputs">
         {isEditing ? (
           <input
             type="text"
-            className="dialkit-color-hex-input"
+            className="design-kit-color-hex-input"
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onBlur={handleTextSubmit}
@@ -54,14 +54,14 @@ export function ColorControl({ label, value, onChange }: ColorControlProps) {
           />
         ) : (
           <span
-            className="dialkit-color-hex"
+            className="design-kit-color-hex"
             onClick={() => setIsEditing(true)}
           >
             {(value ?? '').toUpperCase()}
           </span>
         )}
         <button
-          className="dialkit-color-swatch"
+          className="design-kit-color-swatch"
           style={{ backgroundColor: value }}
           onClick={() => colorInputRef.current?.click()}
           title="Pick color"
@@ -69,7 +69,7 @@ export function ColorControl({ label, value, onChange }: ColorControlProps) {
         <input
           ref={colorInputRef}
           type="color"
-          className="dialkit-color-picker-native"
+          className="design-kit-color-picker-native"
           value={value.length === 4 ? expandShorthandHex(value) : value.slice(0, 7)}
           onChange={(e) => onChange(e.target.value)}
         />

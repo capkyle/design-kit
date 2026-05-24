@@ -1,11 +1,11 @@
 import { Teleport, defineComponent, h, ref, watch, type PropType } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
 import { ICON_CHEVRON, ICON_TRASH } from '../../icons';
-import { DialStore } from '../../store/DialStore';
-import type { Preset } from '../../store/DialStore';
+import { DesignKitStore } from '../../store/DesignKitStore';
+import type { Preset } from '../../store/DesignKitStore';
 
 export const PresetManager = defineComponent({
-  name: 'DialKitPresetManager',
+  name: 'DesignKitPresetManager',
   props: {
     panelId: { type: String, required: true },
     presets: {
@@ -78,30 +78,30 @@ export const PresetManager = defineComponent({
 
     const handleSelect = (presetId: string | null) => {
       if (presetId) {
-        DialStore.loadPreset(props.panelId, presetId);
+        DesignKitStore.loadPreset(props.panelId, presetId);
       } else {
-        DialStore.clearActivePreset(props.panelId);
+        DesignKitStore.clearActivePreset(props.panelId);
       }
       close();
     };
 
     const handleDelete = (event: MouseEvent, presetId: string) => {
       event.stopPropagation();
-      DialStore.deletePreset(props.panelId, presetId);
+      DesignKitStore.deletePreset(props.panelId, presetId);
     };
 
-    return () => h('div', { class: 'dialkit-preset-manager' }, [
+    return () => h('div', { class: 'design-kit-preset-manager' }, [
       h('button', {
         ref: triggerRef,
-        class: 'dialkit-preset-trigger',
+        class: 'design-kit-preset-trigger',
         onClick: toggle,
         'data-open': String(isOpen.value),
         'data-has-preset': String(!!activePreset()),
         'data-disabled': String(!hasPresets()),
       }, [
-        h('span', { class: 'dialkit-preset-label' }, activePreset()?.name ?? 'Version 1'),
+        h('span', { class: 'design-kit-preset-label' }, activePreset()?.name ?? 'Version 1'),
         h(motion.svg, {
-          class: 'dialkit-select-chevron',
+          class: 'design-kit-select-chevron',
           viewBox: '0 0 24 24',
           fill: 'none',
           stroke: 'currentColor',
@@ -117,9 +117,9 @@ export const PresetManager = defineComponent({
         h(AnimatePresence, null, {
           default: () => isOpen.value
             ? [h(motion.div, {
-              key: 'dialkit-preset-dropdown',
+              key: 'design-kit-preset-dropdown',
               ref: setDropdownRef,
-              class: 'dialkit-root dialkit-preset-dropdown',
+              class: 'design-kit-root design-kit-preset-dropdown',
               style: {
                 position: 'fixed',
                 top: `${pos.value.top}px`,
@@ -132,20 +132,20 @@ export const PresetManager = defineComponent({
               transition: { type: 'spring', visualDuration: 0.15, bounce: 0 },
             }, [
               h('div', {
-                class: 'dialkit-preset-item',
+                class: 'design-kit-preset-item',
                 'data-active': String(!props.activePresetId),
                 onClick: () => handleSelect(null),
-              }, [h('span', { class: 'dialkit-preset-name' }, 'Version 1')]),
+              }, [h('span', { class: 'design-kit-preset-name' }, 'Version 1')]),
 
               ...props.presets.map((preset) => h('div', {
                 key: preset.id,
-                class: 'dialkit-preset-item',
+                class: 'design-kit-preset-item',
                 'data-active': String(preset.id === props.activePresetId),
                 onClick: () => handleSelect(preset.id),
               }, [
-                h('span', { class: 'dialkit-preset-name' }, preset.name),
+                h('span', { class: 'design-kit-preset-name' }, preset.name),
                 h('button', {
-                  class: 'dialkit-preset-delete',
+                  class: 'design-kit-preset-delete',
                   onClick: (event: MouseEvent) => handleDelete(event, preset.id),
                   title: 'Delete preset',
                 }, [

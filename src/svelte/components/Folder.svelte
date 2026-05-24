@@ -109,22 +109,22 @@
 </script>
 
 {#if isRoot && inline}
-  <div class="dialkit-panel-inner dialkit-panel-inline">
-    <div bind:this={contentRef} class="dialkit-folder dialkit-folder-root">
-      <div class="dialkit-folder-header dialkit-panel-header" onclick={(e) => { e.stopPropagation(); handleToggle(); }}>
-        <div class="dialkit-folder-header-top">
-          <div class="dialkit-folder-title-row">
-            <span class="dialkit-folder-title dialkit-folder-title-root">{title}</span>
+  <div class="design-kit-panel-inner design-kit-panel-inline">
+    <div bind:this={contentRef} class="design-kit-folder design-kit-folder-root">
+      <div class="design-kit-folder-header design-kit-panel-header" onclick={(e) => { e.stopPropagation(); handleToggle(); }}>
+        <div class="design-kit-folder-header-top">
+          <div class="design-kit-folder-title-row">
+            <span class="design-kit-folder-title design-kit-folder-title-root">{title}</span>
           </div>
         </div>
 
-        <div class="dialkit-panel-toolbar" onclick={(e) => e.stopPropagation()}>
+        <div class="design-kit-panel-toolbar" onclick={(e) => e.stopPropagation()}>
           {#if toolbar}{@render toolbar()}{/if}
         </div>
       </div>
 
-      <div class="dialkit-folder-content">
-        <div class="dialkit-folder-inner">
+      <div class="design-kit-folder-content">
+        <div class="design-kit-folder-inner">
           {#if children}{@render children()}{/if}
         </div>
       </div>
@@ -133,7 +133,7 @@
 {:else if isRoot}
   <div
     bind:this={panelRef}
-    class="dialkit-panel-inner"
+    class="design-kit-panel-inner"
     data-collapsed={String(isCollapsed)}
     style={panelStyle}
     onpointerdown={handleCollapsedTapStart}
@@ -142,16 +142,16 @@
     onpointerleave={handleCollapsedTapEnd}
     onclick={() => { if (!isOpen) handleToggle(); }}
   >
-    <div bind:this={contentRef} class="dialkit-folder dialkit-folder-root">
-      <div class="dialkit-folder-header dialkit-panel-header" onclick={(e) => { e.stopPropagation(); handleToggle(); }}>
-        <div class="dialkit-folder-header-top">
+    <div bind:this={contentRef} class="design-kit-folder design-kit-folder-root">
+      <div class="design-kit-folder-header design-kit-panel-header" onclick={(e) => { e.stopPropagation(); handleToggle(); }}>
+        <div class="design-kit-folder-header-top">
           {#if isOpen}
-            <div class="dialkit-folder-title-row">
-              <span class="dialkit-folder-title dialkit-folder-title-root">{title}</span>
+            <div class="design-kit-folder-title-row">
+              <span class="design-kit-folder-title design-kit-folder-title-root">{title}</span>
             </div>
           {/if}
 
-          <svg class="dialkit-panel-icon" viewBox="0 0 16 16" fill="none">
+          <svg class="design-kit-panel-icon" viewBox="0 0 16 16" fill="none">
             <path
               opacity="0.5"
               d={ICON_PANEL.path}
@@ -164,15 +164,15 @@
         </div>
 
         {#if isOpen}
-          <div class="dialkit-panel-toolbar" onclick={(e) => e.stopPropagation()}>
+          <div class="design-kit-panel-toolbar" onclick={(e) => e.stopPropagation()}>
             {#if toolbar}{@render toolbar()}{/if}
           </div>
         {/if}
       </div>
 
       {#if isOpen}
-        <div class="dialkit-folder-content">
-          <div class="dialkit-folder-inner">
+        <div class="design-kit-folder-content">
+          <div class="design-kit-folder-inner">
             {#if children}{@render children()}{/if}
           </div>
         </div>
@@ -180,15 +180,15 @@
     </div>
   </div>
 {:else}
-  <div class="dialkit-folder">
-    <div class="dialkit-folder-header" onclick={handleToggle}>
-      <div class="dialkit-folder-header-top">
-        <div class="dialkit-folder-title-row">
-          <span class="dialkit-folder-title">{title}</span>
+  <div class="design-kit-folder">
+    <div class="design-kit-folder-header" onclick={handleToggle}>
+      <div class="design-kit-folder-header-top">
+        <div class="design-kit-folder-title-row">
+          <span class="design-kit-folder-title">{title}</span>
         </div>
 
         <svg
-          class="dialkit-folder-icon"
+          class="design-kit-folder-icon"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -203,8 +203,8 @@
     </div>
 
     {#if isOpen}
-      <div class="dialkit-folder-content" style="clip-path: inset(0 -20px);" transition:slide={{ duration: 220 }}>
-        <div class="dialkit-folder-inner">
+      <div class="design-kit-folder-content" style="clip-path: inset(0 -20px);" transition:slide={{ duration: 220 }}>
+        <div class="design-kit-folder-inner">
           {#if children}{@render children()}{/if}
         </div>
       </div>

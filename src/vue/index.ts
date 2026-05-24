@@ -1,10 +1,10 @@
-export { useDialKit } from './useDialKit';
-export type { UseDialOptions } from './useDialKit';
-export { vDialKit } from './directives/dialkit';
-export type { DialKitDirectiveOptions, DialKitDirectiveValue } from './directives/dialkit';
+export { useDesignKit } from './useDesignKit';
+export type { UseDialOptions } from './useDesignKit';
+export { vDesignKit } from './directives/design-kit';
+export type { DesignKitDirectiveOptions, DesignKitDirectiveValue } from './directives/design-kit';
 
-export { DialRoot } from './components/DialRoot';
-export type { DialPosition, DialMode, DialTheme } from './components/DialRoot';
+export { DesignKitRoot } from './components/DesignKitRoot';
+export type { DesignPosition, DesignMode, DesignTheme } from './components/DesignKitRoot';
 
 export { ShortcutListener, useShortcutContext, ShortcutKey } from './components/ShortcutListener';
 export type { ShortcutState } from './components/ShortcutListener';
@@ -23,7 +23,7 @@ export { SelectControl } from './components/SelectControl';
 export { ColorControl } from './components/ColorControl';
 export { PresetManager } from './components/PresetManager';
 
-export { DialStore } from '../store/DialStore';
+export { DesignKitStore } from '../store/DesignKitStore';
 export type {
   SpringConfig,
   EasingConfig,
@@ -33,10 +33,10 @@ export type {
   ColorConfig,
   TextConfig,
   Preset,
-  DialValue,
-  DialConfig,
+  DesignValue,
+  DesignConfig,
   ResolvedValues,
   ControlMeta,
   PanelConfig,
   ShortcutConfig,
-} from '../store/DialStore';
+} from '../store/DesignKitStore';

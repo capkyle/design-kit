@@ -1,6 +1,6 @@
 import { defineComponent, h, computed, nextTick, onMounted, onUnmounted, ref, watch, type PropType } from 'vue';
 import { animate, motionValue } from 'motion-v';
-import type { ShortcutConfig } from '../../store/DialStore';
+import type { ShortcutConfig } from '../../store/DesignKitStore';
 import { decimalsForStep, roundValue, snapToDecile, formatSliderShortcut } from '../../shortcut-utils';
 
 const CLICK_THRESHOLD = 3;
@@ -9,7 +9,7 @@ const MAX_CURSOR_RANGE = 200;
 const MAX_STRETCH = 8;
 
 export const Slider = defineComponent({
-  name: 'DialKitSlider',
+  name: 'DesignKitSlider',
   props: {
     label: { type: String, required: true },
     value: { type: Number, required: true },
@@ -314,14 +314,14 @@ export const Slider = defineComponent({
         const count = Math.max(0, Math.floor(discreteSteps.value) - 1);
         for (let i = 0; i < count; i += 1) {
           const pct = ((i + 1) * step.value) / (max.value - min.value) * 100;
-          marks.push(h('div', { class: 'dialkit-slider-hashmark', style: { left: `${pct}%` } }));
+          marks.push(h('div', { class: 'design-kit-slider-hashmark', style: { left: `${pct}%` } }));
         }
         return marks;
       }
 
       for (let i = 0; i < 9; i += 1) {
         const pct = (i + 1) * 10;
-        marks.push(h('div', { class: 'dialkit-slider-hashmark', style: { left: `${pct}%` } }));
+        marks.push(h('div', { class: 'design-kit-slider-hashmark', style: { left: `${pct}%` } }));
       }
       return marks;
     });
@@ -360,10 +360,10 @@ export const Slider = defineComponent({
       unsubHandleScaleY?.();
     });
 
-    return () => h('div', { ref: wrapperRef, class: 'dialkit-slider-wrapper' }, [
+    return () => h('div', { ref: wrapperRef, class: 'design-kit-slider-wrapper' }, [
       h('div', {
         ref: trackRef,
-        class: `dialkit-slider ${isActive.value ? 'dialkit-slider-active' : ''}`,
+        class: `design-kit-slider ${isActive.value ? 'design-kit-slider-active' : ''}`,
         onPointerdown: handlePointerDown,
         onPointermove: handlePointerMove,
         onPointerup: handlePointerUp,
@@ -377,28 +377,28 @@ export const Slider = defineComponent({
           animateHandleState();
         },
       }, [
-        h('div', { class: 'dialkit-slider-hashmarks' }, hashMarks.value),
+        h('div', { class: 'design-kit-slider-hashmarks' }, hashMarks.value),
         h('div', {
           ref: fillRef,
-          class: 'dialkit-slider-fill',
+          class: 'design-kit-slider-fill',
           style: {
             width: `${fillPercent.get()}%`,
           },
         }),
         h('div', {
           ref: handleRef,
-          class: 'dialkit-slider-handle',
+          class: 'design-kit-slider-handle',
           style: {
             left: `max(5px, calc(${fillPercent.get()}% - 9px))`,
             transform: 'translateY(-50%) scaleX(0.25) scaleY(1)',
             opacity: 0,
           },
         }),
-        h('span', { ref: labelRef, class: 'dialkit-slider-label' }, [
+        h('span', { ref: labelRef, class: 'design-kit-slider-label' }, [
           props.label,
           props.shortcut
             ? h('span', {
-                class: `dialkit-shortcut-pill${props.shortcutActive ? ' dialkit-shortcut-pill-active' : ''}`,
+                class: `design-kit-shortcut-pill${props.shortcutActive ? ' design-kit-shortcut-pill-active' : ''}`,
               }, formatSliderShortcut(props.shortcut))
             : null,
         ]),
@@ -406,7 +406,7 @@ export const Slider = defineComponent({
           ? h('input', {
             ref: inputRef,
             type: 'text',
-            class: 'dialkit-slider-input',
+            class: 'design-kit-slider-input',
             value: inputValue.value,
             onInput: (event: Event) => {
               inputValue.value = (event.target as HTMLInputElement).value;
@@ -418,7 +418,7 @@ export const Slider = defineComponent({
           })
           : h('span', {
             ref: valueSpanRef,
-            class: `dialkit-slider-value ${isValueEditable.value ? 'dialkit-slider-value-editable' : ''}`,
+            class: `design-kit-slider-value ${isValueEditable.value ? 'design-kit-slider-value-editable' : ''}`,
             onMouseenter: () => {
               isValueHovered.value = true;
             },

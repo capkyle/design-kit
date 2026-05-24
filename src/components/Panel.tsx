@@ -1,6 +1,6 @@
 import { useState, useContext, useSyncExternalStore } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { DialStore, ControlMeta, PanelConfig, SpringConfig, TransitionConfig } from '../store/DialStore';
+import { DesignKitStore, ControlMeta, PanelConfig, SpringConfig, TransitionConfig } from '../store/DesignKitStore';
 import { ShortcutContext } from './ShortcutListener';
 import { ShortcutsMenu } from './ShortcutsMenu';
 import { ICON_CLIPBOARD, ICON_CHECK, ICON_ADD_PRESET } from '../icons';
@@ -28,29 +28,29 @@ export function Panel({ panel, defaultOpen = true, inline = false }: PanelProps)
 
   // Subscribe to panel value changes
   const values = useSyncExternalStore(
-    (cb) => DialStore.subscribe(panel.id, cb),
-    () => DialStore.getValues(panel.id),
-    () => DialStore.getValues(panel.id)
+    (cb) => DesignKitStore.subscribe(panel.id, cb),
+    () => DesignKitStore.getValues(panel.id),
+    () => DesignKitStore.getValues(panel.id)
   );
 
-  const presets = DialStore.getPresets(panel.id);
-  const activePresetId = DialStore.getActivePresetId(panel.id);
+  const presets = DesignKitStore.getPresets(panel.id);
+  const activePresetId = DesignKitStore.getActivePresetId(panel.id);
 
   const handleAddPreset = () => {
     const nextNum = presets.length + 2;
-    DialStore.savePreset(panel.id, `Version ${nextNum}`);
+    DesignKitStore.savePreset(panel.id, `Version ${nextNum}`);
   };
 
   const handleCopy = () => {
     const jsonStr = JSON.stringify(values, null, 2);
 
-    const instruction = `Update the useDialKit configuration for "${panel.name}" with these values:
+    const instruction = `Update the useDesignKit configuration for "${panel.name}" with these values:
 
 \`\`\`json
 ${jsonStr}
 \`\`\`
 
-Apply these values as the new defaults in the useDialKit call.`;
+Apply these values as the new defaults in the useDesignKit call.`;
 
     navigator.clipboard.writeText(instruction);
     setCopied(true);
@@ -67,7 +67,7 @@ Apply these values as the new defaults in the useDialKit call.`;
             key={control.path}
             label={control.label}
             value={value as number}
-            onChange={(v) => DialStore.updateValue(panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(panel.id, control.path, v)}
             min={control.min}
             max={control.max}
             step={control.step}
@@ -82,7 +82,7 @@ Apply these values as the new defaults in the useDialKit call.`;
             key={control.path}
             label={control.label}
             checked={value as boolean}
-            onChange={(v) => DialStore.updateValue(panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(panel.id, control.path, v)}
             shortcut={control.shortcut}
             shortcutActive={shortcutCtx.activePanelId === panel.id && shortcutCtx.activePath === control.path}
           />
@@ -96,7 +96,7 @@ Apply these values as the new defaults in the useDialKit call.`;
             path={control.path}
             label={control.label}
             spring={value as SpringConfig}
-            onChange={(v) => DialStore.updateValue(panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(panel.id, control.path, v)}
           />
         );
 
@@ -108,7 +108,7 @@ Apply these values as the new defaults in the useDialKit call.`;
             path={control.path}
             label={control.label}
             value={value as TransitionConfig}
-            onChange={(v) => DialStore.updateValue(panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(panel.id, control.path, v)}
           />
         );
 
@@ -125,7 +125,7 @@ Apply these values as the new defaults in the useDialKit call.`;
             key={control.path}
             label={control.label}
             value={value as string}
-            onChange={(v) => DialStore.updateValue(panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(panel.id, control.path, v)}
             placeholder={control.placeholder}
           />
         );
@@ -137,7 +137,7 @@ Apply these values as the new defaults in the useDialKit call.`;
             label={control.label}
             value={value as string}
             options={control.options ?? []}
-            onChange={(v) => DialStore.updateValue(panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(panel.id, control.path, v)}
           />
         );
 
@@ -147,7 +147,7 @@ Apply these values as the new defaults in the useDialKit call.`;
             key={control.path}
             label={control.label}
             value={value as string}
-            onChange={(v) => DialStore.updateValue(panel.id, control.path, v)}
+            onChange={(v) => DesignKitStore.updateValue(panel.id, control.path, v)}
           />
         );
 
@@ -155,8 +155,8 @@ Apply these values as the new defaults in the useDialKit call.`;
         return (
           <button
             key={control.path}
-            className="dialkit-button"
-            onClick={() => DialStore.triggerAction(panel.id, control.path)}
+            className="design-kit-button"
+            onClick={() => DesignKitStore.triggerAction(panel.id, control.path)}
           >
             {control.label}
           </button>
@@ -176,7 +176,7 @@ Apply these values as the new defaults in the useDialKit call.`;
   const toolbar = (
     <>
       <motion.button
-        className="dialkit-toolbar-add"
+        className="design-kit-toolbar-add"
         onClick={handleAddPreset}
         title="Add preset"
         whileTap={{ scale: 0.9 }}
@@ -197,7 +197,7 @@ Apply these values as the new defaults in the useDialKit call.`;
       />
 
       <motion.button
-        className="dialkit-toolbar-add"
+        className="design-kit-toolbar-add"
         onClick={handleCopy}
         title="Copy parameters"
         whileTap={{ scale: 0.9 }}
@@ -246,7 +246,7 @@ Apply these values as the new defaults in the useDialKit call.`;
   );
 
   return (
-    <div className="dialkit-panel-wrapper">
+    <div className="design-kit-panel-wrapper">
       <Folder title={panel.name} defaultOpen={defaultOpen} isRoot={true} inline={inline} onOpenChange={setIsPanelOpen} toolbar={toolbar}>
         {renderControls()}
       </Folder>
